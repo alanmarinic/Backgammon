@@ -1,0 +1,69 @@
+package splosno;
+
+import logika.Igra;
+import logika.Igralec;
+import logika.Polje;
+import logika.Stanje;
+import logika.Vrsta;
+
+public class Igra {
+
+
+	// Igralno polje
+	public Polje[][] plosca;
+	
+	// Igralec, ki je trenutno na potezi.
+		// Vrednost je poljubna, če je igre konec (se pravi, lahko je napačna).
+	public Igralec naPotezi;
+	
+	public Igra() {
+		plosca = new Polje[N][N];
+		for (int i = 0; i < N; i++) {
+			for (int j = 0; j < N; j++) {
+				plosca[i][j] = Polje.PRAZNO;
+			}
+		}
+		naPotezi = Igralec.Bela;
+	}
+	
+	public Igra(Igra igra) {
+		this.plosca = new Polje[N][N];
+		for (int i = 0; i < N; i++) {
+			for (int j = 0; j < N; j++) {
+				this.plosca[i][j] = igra.plosca[i][j];
+			}
+		}
+		this.naPotezi = igra.naPotezi;
+	}
+
+	
+	public Polje[][] getPlosca () {
+		return plosca;
+	}
+	
+	public Igralec naPotezi() {
+		return naPotezi;
+	}
+	
+	public int[] moznePoteze() {//manjka
+		
+	}
+	
+	public Stanje stanje() {
+		// Ali imamo zmagovalca?
+		
+		
+		//manjka. ce na polju ni vec zetonov je zmaga
+		
+		
+		// Če imamo zetone obeh barv , igre ni konec in je nekdo na potezi
+		
+		//manjka
+		
+		return Stanje.V_TEKU;
+			}
+		}
+		// je mozno neodloceno??
+		return Stanje.NEODLOCENO;
+	}
+}

@@ -1,0 +1,15 @@
+package splosno;
+
+import logika.Igralec;
+import logika.Polje;
+
+public class Igra {
+
+
+	// Igralno polje
+	public Polje[][] plosca;
+	
+	// Igralec, ki je trenutno na potezi.
+		// Vrednost je poljubna, če je igre konec (se pravi, lahko je napačna).
+		public Igralec naPotezi;
+}

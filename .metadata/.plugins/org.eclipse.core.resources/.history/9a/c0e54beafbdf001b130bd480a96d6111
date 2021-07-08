@@ -1,0 +1,88 @@
+package gui;
+
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+
+import javax.swing.JPanel;
+
+@SuppressWarnings("serial")
+public class Platno extends JPanel {
+	
+	public Platno() {
+		setBackground(Color.PINK);
+	}
+	
+	@Override
+	public Dimension getPreferredSize() {
+		return new Dimension(720, 400);
+	}
+
+	
+	// Relativna širina črte
+	private final static double LINE_WIDTH = 0.05;
+	
+	// Širina enega kvadratka
+	private double skatlice() {
+		return getWidth() / 8;
+	}
+	
+	private double rob() {
+		return getWidth() / 28;
+	}
+	
+	private double spice() {
+		return (getWidth() - skatlice() - 4 * rob()) / 12;
+	}
+	
+	
+	
+	
+	// Relativni prostor okoli X in O
+	private final static double PADDING = 0.18;
+	
+	@Override
+	protected void paintComponent(Graphics g) {
+		super.paintComponent(g);
+		Graphics2D g2 = (Graphics2D)g;
+		
+		int skatlice = (int)skatlice();
+		int rob = (int)rob();
+		int spice = (int)spice();
+		
+		g2.setColor(Color.WHITE);
+		int sirina =(int)((getWidth() - skatlice - 4 * rob) /2);
+		g2.fillRect(rob, rob, sirina, (int)(getHeight() - 2* rob));
+		g2.fillRect(3*rob + sirina, rob, sirina, (int)(getHeight() - 2* rob));
+		
+		g2.setColor(Color.GREEN);
+		g2.fillRect((int)(getWidth() - skatlice), rob, skatlice - rob, (int)(getHeight() / 2 - 2 * rob));
+		g2.fillRect((int)(getWidth() - skatlice), (int)(rob + getHeight() /2 ), (skatlice - rob), (int)((getHeight() - 4 * rob) /2 ));
+		
+		boolean modra = false;
+		for (int i = 0;i < 12;i++) {
+			int zamik;
+			if (i < 6) {zamik = 0;} else {zamik = 2 * rob;}
+			if (modra) {g2.setColor(Color.BLUE);} else {g2.setColor(Color.GREEN);}
+			g2.fillPolygon(new int[] {rob + i * spice + zamik, rob + (i + 1) * spice + zamik, rob + i * spice + spice/2 + zamik}, 
+					new int[] {(int)rob, (int)rob, (int)(getHeight()/2 - rob)}, 3);
+			if (modra) {g2.setColor(Color.BLUE);} else {g2.setColor(Color.GREEN);}
+			modra = ! modra;
+			g2.fillPolygon(new int[] {rob + i * spice + zamik, rob + (i + 1) * spice + zamik, rob + i * spice + spice/2 + zamik}, 
+					new int[] {(int)(getHeight() -rob), (int)(getHeight() -rob), (int)(getHeight()/2 + rob)}, 3);
+		
+		}
+	}
+
+}
+
+
+
+
+
+
+
+
+
+

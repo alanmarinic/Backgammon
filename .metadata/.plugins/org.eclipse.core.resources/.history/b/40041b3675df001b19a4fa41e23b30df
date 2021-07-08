@@ -1,0 +1,7 @@
+package splosno;
+
+public enum Polje {
+	//s stevilko?
+	 Bela, Crna, PRAZNO
+	}
+

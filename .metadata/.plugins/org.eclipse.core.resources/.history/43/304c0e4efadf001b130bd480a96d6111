@@ -1,0 +1,79 @@
+package gui;
+
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+
+import javax.swing.JPanel;
+
+@SuppressWarnings("serial")
+public class Platno extends JPanel {
+	
+	public Platno() {
+		setBackground(Color.PINK);
+	}
+	
+	@Override
+	public Dimension getPreferredSize() {
+		return new Dimension(400, 400);
+	}
+
+	
+	// Relativna širina črte
+	private final static double LINE_WIDTH = 0.05;
+	
+	// Širina enega kvadratka
+	private double skatlice() {
+		return getWidth() / 8;
+	}
+	
+	private double rob() {
+		return getWidth() / 28;
+	}
+	
+	private double spice() {
+		return (getWidth() - skatlice() - 4 * rob()) / 12;
+	}
+	
+	
+	
+	
+	// Relativni prostor okoli X in O
+	private final static double PADDING = 0.18;
+	
+	@Override
+	protected void paintComponent(Graphics g) {
+		super.paintComponent(g);
+		Graphics2D g2 = (Graphics2D)g;
+		
+		int skatlice = (int)skatlice();
+		int rob = (int)rob();
+		
+		g2.setColor(Color.WHITE);
+		int sirina =(int)((getWidth() - skatlice - 4 * rob) /2);
+		g2.fillRect(rob, rob, sirina, (int)(getHeight() - 2* rob));
+		g2.fillRect((int)(3*rob + sirina), (int)rob, sirina, (int)(getHeight() - 2* rob));
+		
+		g2.setColor(Color.GREEN);
+		g2.drawRect((int)(getWidth() - skatlice), (int)rob, (int)(skatlice - PADDING), (int)(getHeight() /3 ));
+		g2.drawRect((int)(getWidth() - skatlice), (int)(3 * rob + getHeight() /3 ), (int)(skatlice - PADDING), (int)(getHeight() /3 ));
+		
+		for (int i = 0;i < 12;i++) {
+			g2.drawPolygon(new int[] {(int)(rob + i * skatlice), (int)(rob + (i + 1) * skatlice), (int)(rob + i * skatlice + skatlice/2)}, new int[] {(int)rob, (int)rob, (int)(getHeight()/2 - rob)}, 3);
+			g2.drawPolygon(new int[] {(int)(rob + i * skatlice), (int)(rob + (i + 1) * skatlice), (int)(rob + i * skatlice + skatlice/2)}, new int[] {(int)(getHeight() -rob), (int)(getHeight() -rob), (int)(getHeight()/2 + rob)}, 3);
+		
+		}
+	}
+
+}
+
+
+
+
+
+
+
+
+
+
