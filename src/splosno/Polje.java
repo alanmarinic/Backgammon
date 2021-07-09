@@ -1,8 +1,10 @@
 package splosno;
 
 public enum Polje {
-	 Bela, Crna, PRAZNO
+	 Bela, Crna, PRAZNO;
 	 
-	 //boljsa definicija?? s stevilom zetonov
+	 protected int steviloZetonov;
+	 
+	 //je to ok???
 	}
 

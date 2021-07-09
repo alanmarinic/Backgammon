@@ -1,5 +1,6 @@
 package gui;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -41,6 +42,20 @@ public class Platno extends JPanel {
 	
 	// Relativni prostor okoli X in O
 	private final static double PADDING = 0.18;
+	
+	
+	private void paintBela(Graphics2D g2, int i) {
+		double zamik;
+		if (i < 12) {}
+		double w = spice();
+		double d = w * (1.0 - LINE_WIDTH - 2.0 * PADDING); // premer O
+		double x = w * (i + 0.5 * LINE_WIDTH + PADDING);
+		double y = w * (j + 0.5 * LINE_WIDTH + PADDING);
+		g2.setColor(Color.WHITE);
+		g2.setStroke(new BasicStroke((float) (w * LINE_WIDTH)));
+		g2.drawOval((int)x, (int)y, (int)d , (int)d);
+	}
+	
 	
 	@Override
 	protected void paintComponent(Graphics g) {
