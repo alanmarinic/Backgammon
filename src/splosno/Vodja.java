@@ -1,5 +1,6 @@
 package splosno;
 
+import java.util.Arrays;
 import java.util.Map;
 
 import gui.Okno;
@@ -23,7 +24,7 @@ public class Vodja {
 	public static void igramo () {
 		okno.osveziGUI();
 		switch (igra.stanje()) {
-		case ZMAGA_CRNA: System.out.println("jej"); break;
+		case ZMAGA_CRNA: break;
 		case ZMAGA_BELA: 
 		case NEODLOCENO: 
 			return; // odhajamo iz metode igramo
@@ -41,7 +42,19 @@ public class Vodja {
 		}
 	}
 	
-	public static void igrajRacunalnikovoPotezo() {//manjka}
+	public static void igrajRacunalnikovoPotezo() {
+		int prviMet = Igra.metKocke();
+		int drugiMet = Igra.metKocke();
+		if (prviMet == drugiMet) {
+			int[] meti = new int[] {prviMet, prviMet, prviMet, prviMet};
+		}
+		else {int[] meti = new int[] {prviMet, drugiMet};}
+		
+
+		kocka
+		mozne
+		eno zbere
+	}
 	
 	public static void igrajClovekovoPotezo(Koordinati poteza) {
 		if (igra.odigraj(poteza)) clovekNaVrsti = false;
