@@ -1,18 +1,20 @@
 package splosno;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+
 
 public class Igra {
 
 
 	// Igralno polje
-	public Polje[] plosca;
+	public static Polje[] plosca;
 	
 	// Igralec, ki je trenutno na potezi.
 		// Vrednost je poljubna, če je igre konec (se pravi, lahko je napačna).
-	public Igralec naPotezi;
+	public static Igralec naPotezi;
 	
 	private static final Random RANDOM = new Random();
 
@@ -28,7 +30,7 @@ public class Igra {
 			System.out.println("Zacne crni, ki je vrgel" + crna);
 			return Igralec.Crna;
 		}
-		else {kdoZacne();}	
+		else {return kdoZacne();}	
 	}
 	
 	public static int metKocke() {
@@ -80,8 +82,8 @@ public class Igra {
 		return naPotezi;
 	}
 	
-	public List<Poteza> moznePoteze(int[] meti) {
-		List<Poteza> moznePoteze;
+	public static List<Poteza> moznePoteze(int[] meti) {
+		List<Poteza> moznePoteze = new ArrayList<Poteza>();
 		//Najprej preverimo, ce je kaksen zeton na sredini
 		if (naPotezi == Igralec.Bela) {
 			if (plosca[26].steviloZetonov > 0) {
@@ -89,37 +91,53 @@ public class Igra {
 					if (plosca[i] == Polje.PRAZNO || plosca[i] == Polje.Bela || (plosca[i] == Polje.Crna && plosca[i].steviloZetonov == 1)) 
 						{moznePoteze.add(new Poteza(26, i));}
 				}
-			return moznePoteze;
 			}
 			else {
+				boolean cetrtiKvadrant = true;
 				for (int polje = 1; polje < 25; polje++) {
 					if (plosca[polje] == Polje.Bela) {
-						for (int met: meti) {
-							
-							////////////////
-							if (plosca[polje + met] == Polje.Crna && plosca[polje + met].steviloZetonov > 1) {
-								continue;
-							}
-							else {
-								
+						if (polje < 19) {cetrtiKvadrant = false;}
+						for (int met : meti) {
+							if (cetrtiKvadrant || polje + met < 25) {
+								if (plosca[polje + met] == Polje.Crna && plosca[polje + met].steviloZetonov > 1) {
+									continue;
+								}
+								else {
+									moznePoteze.add(new Poteza(polje, Math.min(25, polje + met)));
+								}
 							}
 						}
 					}
 				}
-				
 			}
 		}
-		///////////////
-		else if (naPotezi == Igralec.Crna && plosca[27].steviloZetonov > 0) {
-			for (int i: meti) {
-				if (plosca[25 - i] == Polje.PRAZNO || plosca[25 - i] == Polje.Crna || (plosca[25 - i] == Polje.Bela && plosca[25 - i].steviloZetonov == 1)) 
-					{moznePoteze.add(new Poteza(27, 25 - i));}
+		else if (naPotezi == Igralec.Crna) {
+			if (plosca[27].steviloZetonov > 0) {
+				for (int i: meti) {
+					if (plosca[25 - i] == Polje.PRAZNO || plosca[25 - i] == Polje.Crna || (plosca[25 - i] == Polje.Bela && plosca[25 - i].steviloZetonov == 1)) 
+						{moznePoteze.add(new Poteza(27, 25 - i));}
+				}
 			}
-			return moznePoteze;
+			else {
+				boolean prviKvadrant = true;
+				for (int polje = 24; polje > 0; polje--) {
+					if (plosca[polje] == Polje.Crna) {
+						if (polje > 6) {prviKvadrant = false;}
+						for (int met : meti) {
+							if (prviKvadrant || polje - met > 0) {
+								if (plosca[polje - met] == Polje.Bela && plosca[polje - met].steviloZetonov > 1) {
+									continue;
+								}
+								else {
+									moznePoteze.add(new Poteza(polje, Math.max(0, polje - met)));
+								}
+							}
+						}
+					}
+				}
+			}
 		}
-
 		return moznePoteze;
-		
 	}
 	
 	public boolean neodlocenoPogoj(int zacetek, int konec) {
@@ -142,4 +160,63 @@ public class Igra {
 			{return Stanje.NEODLOCENO;}
 		else {return Stanje.V_TEKU;}		
 	}
+	
+	public void izbrisiZeton(int polje) {
+		if (plosca[polje].steviloZetonov > 1) {
+			plosca[polje].steviloZetonov -= 1;
+		}
+		else {
+			plosca[polje].steviloZetonov = 0;
+			if (polje < 25) {
+				plosca[polje] = Polje.PRAZNO;
+			}
+		}
+	}
+	
+	public void dodajZeton(int polje) {
+		if (plosca[polje] == Polje.PRAZNO) {
+			plosca[polje] = naPotezi.getPolje();
+			plosca[polje].steviloZetonov = 1;
+		}
+		else if (plosca[polje] == naPotezi.getPolje()) {
+			plosca[polje].steviloZetonov += 1;
+		}
+		else {
+			plosca[polje] = naPotezi.getPolje();
+			plosca[polje].steviloZetonov = 1;
+			if (naPotezi == Igralec.Crna) {
+				plosca[26].steviloZetonov += 1;
+			}
+			else {
+				plosca[27].steviloZetonov += 1;
+			}
+		}
+	}
+	
+	public boolean odigraj(Poteza poteza) {
+		//pogledamo, ce je poteza veljavna
+		//ce je pocasen, odstrani primer za racunalnik
+		int[] met = new int[] {Math.abs(poteza.koncnoPolje - poteza.zacetnoPolje)};
+		List<Poteza> moznePoteze = moznePoteze(met);
+		if (moznePoteze.contains(poteza)) {
+			//izbrisemo zacetni zeton
+			izbrisiZeton(poteza.zacetnoPolje);
+			//dodamo zeton na koncnem polju
+			dodajZeton(poteza.koncnoPolje);
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }

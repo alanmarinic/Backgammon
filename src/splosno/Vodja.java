@@ -1,20 +1,24 @@
 package splosno;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import gui.Okno;
 
 public class Vodja {
 
 	public static Map<Igralec, VrstaIgralca> vrstaIgralca;
-	public static Map<Igralec,KdoIgra> kdoIgra;
+	public static Map<Igralec, KdoIgra> kdoIgra;
 	
 	public static Okno okno;
 
 	public static Igra igra = null;
 	
 	public static boolean clovekNaVrsti = false;
+	
+	private static final Random RANDOM = new Random();
 
 	public static void igramoNovoIgro () {
 		igra = new Igra ();
@@ -45,18 +49,21 @@ public class Vodja {
 	public static void igrajRacunalnikovoPotezo() {
 		int prviMet = Igra.metKocke();
 		int drugiMet = Igra.metKocke();
+		int[] meti;
 		if (prviMet == drugiMet) {
-			int[] meti = new int[] {prviMet, prviMet, prviMet, prviMet};
+			meti = new int[] {prviMet, prviMet, prviMet, prviMet};
 		}
-		else {int[] meti = new int[] {prviMet, drugiMet};}
+		else {meti = new int[] {prviMet, drugiMet};}
+		List<Poteza> moznePoteze = Igra.moznePoteze(meti);
+		int i = RANDOM.nextInt(moznePoteze.size());	
+		Poteza poteza = moznePoteze.get(i);
+		igra.odigraj(poteza);
+		igramo ();
 		
 
-		kocka
-		mozne
-		eno zbere
 	}
 	
-	public static void igrajClovekovoPotezo(Koordinati poteza) {
+	public static void igrajClovekovoPotezo(Poteza poteza) {
 		if (igra.odigraj(poteza)) clovekNaVrsti = false;
 		igramo ();
 	}	

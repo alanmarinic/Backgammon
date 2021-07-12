@@ -5,6 +5,5 @@ public enum Polje {
 	 
 	 protected int steviloZetonov;
 	 
-	 //je to ok???
 	}
 
