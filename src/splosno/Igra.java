@@ -44,10 +44,11 @@ public class Igra {
 		//polji 26 in 27 predstavljata sredinsko polje z zbitimi zetoni. 26 od belih in 27 od crnih 
 		List<Integer> bele = Arrays.asList(1, 12, 17, 19, 25, 26);
 		List<Integer> crne = Arrays.asList(0, 6, 8, 13, 24, 27);
-		for (int i = 0; i < 26; i++) {
+		for (int i = 0; i < 28; i++) {
 			if (bele.contains(i)) {plosca[i] = Polje.Bela;}
 			else if (crne.contains(i)) {plosca[i] = Polje.Crna;}
 			else {plosca[i] = Polje.PRAZNO;}
+			plosca[i].steviloZetonov = 0;
 		}
 		plosca[0].steviloZetonov = 0;
 		plosca[1].steviloZetonov = 2;
@@ -66,8 +67,8 @@ public class Igra {
 	}
 	
 	public Igra(Igra igra) {
-		this.plosca = new Polje[26];
-		for (int i = 0; i < 26; i++) {
+		this.plosca = new Polje[28];
+		for (int i = 0; i < 28; i++) {
 				this.plosca[i] = igra.plosca[i];
 		}
 		this.naPotezi = igra.naPotezi;

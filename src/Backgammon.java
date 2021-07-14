@@ -7,7 +7,7 @@ public class Backgammon {
 		Okno glavno_okno = new Okno();
 		glavno_okno.pack();
 		glavno_okno.setVisible(true);
-		//Vodja.okno = glavno_okno;
+		Vodja.okno = glavno_okno;
 	}
 
 }

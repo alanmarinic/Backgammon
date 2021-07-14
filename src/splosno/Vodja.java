@@ -17,6 +17,7 @@ public class Vodja {
 	public static Igra igra = null;
 	
 	public static boolean clovekNaVrsti = false;
+	public static KdoIgra racunalnikovaInteligenca;
 	
 	private static final Random RANDOM = new Random();
 

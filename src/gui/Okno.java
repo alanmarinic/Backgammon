@@ -5,12 +5,21 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.EnumMap;
 
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+
+import splosno.Igralec;
+import splosno.KdoIgra;
+import splosno.Vodja;
+import splosno.VrstaIgralca;
 
 @SuppressWarnings("serial")
 public class Okno extends JFrame implements ActionListener {
@@ -77,9 +86,83 @@ public class Okno extends JFrame implements ActionListener {
 		return menuitem;
 	}
 
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
+	// Odzivi ob izbirah različnih opcij v menuju
+		@Override
+		public void actionPerformed(ActionEvent e) {
+		// PODMENU - NOVA IGRA
+			// Nastavi izbiro igralcev
+			if (e.getSource() == igraClovekRacunalnik) {
+				Vodja.vrstaIgralca = new EnumMap<Igralec,VrstaIgralca>(Igralec.class);
+				Vodja.vrstaIgralca.put(Igralec.Crna, VrstaIgralca.C);
+				Vodja.vrstaIgralca.put(Igralec.Bela, VrstaIgralca.R);
+				String ime = JOptionPane.showInputDialog(this, "Vnesi ime");
+				Vodja.kdoIgra = new EnumMap<Igralec,KdoIgra>(Igralec.class);
+				Vodja.kdoIgra.put(Igralec.Crna, new KdoIgra(ime));
+				Vodja.kdoIgra.put(Igralec.Bela, Vodja.racunalnikovaInteligenca);
+				Vodja.igramoNovoIgro();
+			}
+			else if (e.getSource() == igraRacunalnikClovek) {
+				Vodja.vrstaIgralca = new EnumMap<Igralec,VrstaIgralca>(Igralec.class);
+				Vodja.vrstaIgralca.put(Igralec.Crna, VrstaIgralca.R);
+				Vodja.vrstaIgralca.put(Igralec.Bela, VrstaIgralca.C);
+				String ime = JOptionPane.showInputDialog(this, "Vnesi ime");
+				Vodja.kdoIgra = new EnumMap<Igralec,KdoIgra>(Igralec.class);
+				Vodja.kdoIgra.put(Igralec.Crna, Vodja.racunalnikovaInteligenca);
+				Vodja.kdoIgra.put(Igralec.Bela, new KdoIgra(ime));
+				Vodja.igramoNovoIgro();
+			}
+			else if (e.getSource() == igraClovekClovek) {
+				Vodja.vrstaIgralca = new EnumMap<Igralec,VrstaIgralca>(Igralec.class);
+				Vodja.vrstaIgralca.put(Igralec.Crna, VrstaIgralca.C);
+				Vodja.vrstaIgralca.put(Igralec.Bela, VrstaIgralca.C);
+				JTextField ime_1 = new JTextField();
+				JTextField ime_2 = new JTextField();
+				JComponent[] polja = {
+						new JLabel("Vnesite prvo ime"), ime_1,
+						new JLabel("Vnesite drugo ime"), ime_2,
+				};
+				int izbira = JOptionPane.showConfirmDialog(this, polja, "Input", JOptionPane.OK_CANCEL_OPTION);
+				if (izbira == JOptionPane.OK_OPTION) {}
+				Vodja.kdoIgra = new EnumMap<Igralec,KdoIgra>(Igralec.class);
+				Vodja.kdoIgra.put(Igralec.Bela, new KdoIgra(ime_1.getText()));
+				Vodja.kdoIgra.put(Igralec.Crna, new KdoIgra(ime_2.getText())); 
+				Vodja.igramoNovoIgro();
+			}
+			else if (e.getSource() == igraRacunalnikRacunalnik) {
+				Vodja.vrstaIgralca = new EnumMap<Igralec,VrstaIgralca>(Igralec.class);
+				Vodja.vrstaIgralca.put(Igralec.Crna, VrstaIgralca.R);
+				Vodja.vrstaIgralca.put(Igralec.Bela, VrstaIgralca.R);
+				Vodja.kdoIgra = new EnumMap<Igralec,KdoIgra>(Igralec.class);
+				Vodja.kdoIgra.put(Igralec.Crna, Vodja.racunalnikovaInteligenca);
+				Vodja.kdoIgra.put(Igralec.Bela, Vodja.racunalnikovaInteligenca);
+				Vodja.igramoNovoIgro();
+			}
+	}
 		
+	// Osvezi GUI
+	public void osveziGUI() {
+		// Izpis v statusni vrstici
+		if (Vodja.igra == null) {
+			status.setText("Igra ni v teku.");
+		}
+		else {
+			switch(Vodja.igra.stanje()) {
+			case NEODLOCENO: status.setText("Neodločeno!"); break;
+			case V_TEKU: 
+				status.setText("Na potezi je " + Vodja.igra.naPotezi() + 
+						" - " + Vodja.kdoIgra.get(Vodja.igra.naPotezi()).ime()); 
+				break;
+			case ZMAGA_CRNA: 
+				status.setText("Zmagal je Črni - " + 
+						Vodja.kdoIgra.get(Vodja.igra.naPotezi().nasprotnik()).ime());
+				
+				break;
+			case ZMAGA_BELA: 
+				status.setText("Zmagal je Beli - " + 
+						Vodja.kdoIgra.get(Vodja.igra.naPotezi().nasprotnik()).ime());
+				break;
+			}
+		}
+		platno.repaint();
 	}
 }
