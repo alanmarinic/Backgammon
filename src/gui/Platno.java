@@ -12,6 +12,7 @@ import javax.swing.JPanel;
 
 import splosno.Vodja;
 import splosno.Polje;
+import splosno.PoljeInZetoni;
 import splosno.Poteza;
 
 @SuppressWarnings("serial")
@@ -226,14 +227,13 @@ public class Platno extends JPanel implements MouseListener{
 		}
 			
 		//zetoni
-		Polje[] plosca;
+		PoljeInZetoni[] plosca;
 		if (Vodja.igra != null) {
 			plosca = Vodja.igra.getPlosca();
-			plosca[8].steviloZetonov = 3;
 
 			for (int i = 0; i < 28; i++) {
 				System.out.print(plosca[i].steviloZetonov);
-				switch(plosca[i]) {
+				switch(plosca[i].polje) {
 				case Bela: paintBela(g2, i, plosca[i].steviloZetonov); break;
 				case Crna: paintCrna(g2, i, plosca[i].steviloZetonov); break;
 				default: break;

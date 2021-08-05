@@ -10,7 +10,7 @@ public class Igra {
 
 
 	// Igralno polje
-	public static Polje[] plosca;
+	public static PoljeInZetoni[] plosca;
 	
 	// Igralec, ki je trenutno na potezi.
 		// Vrednost je poljubna, če je igre konec (se pravi, lahko je napačna).
@@ -47,10 +47,11 @@ public class Igra {
 		List<Integer> bele = Arrays.asList(1, 12, 17, 19, 25, 26);
 		List<Integer> crne = Arrays.asList(0, 6, 8, 13, 24, 27);
 		for (int i = 0; i < 28; i++) {
-			if (bele.contains(i)) {plosca[i] = Polje.Bela;}
-			else if (crne.contains(i)) {plosca[i] = Polje.Crna;}
-			else {plosca[i] = Polje.PRAZNO;
-				plosca[i].steviloZetonov = 0;}
+			plosca[i] = new PoljeInZetoni(Polje.PRAZNO, 0);
+			if (bele.contains(i)) {plosca[i].polje = Polje.Bela;}
+			else if (crne.contains(i)) {plosca[i].polje = Polje.Crna;}
+			//else {plosca[i].polje = Polje.PRAZNO;}
+			//plosca[i].steviloZetonov = 0;
 		}
 		plosca[0].steviloZetonov = 0;
 		plosca[1].steviloZetonov = 2;
@@ -69,7 +70,7 @@ public class Igra {
 	}
 	
 	public Igra(Igra igra) {
-		this.plosca = new Polje[28];
+		this.plosca = new PoljeInZetoni[28];
 		for (int i = 0; i < 28; i++) {
 				this.plosca[i] = igra.plosca[i];
 		}
@@ -77,7 +78,7 @@ public class Igra {
 	}
 
 	
-	public Polje[] getPlosca () {
+	public PoljeInZetoni[] getPlosca () {
 		return plosca;
 	}
 	
@@ -91,18 +92,18 @@ public class Igra {
 		if (naPotezi == Igralec.Bela) {
 			if (plosca[26].steviloZetonov > 0) {
 				for (int i: meti) {
-					if (plosca[i] == Polje.PRAZNO || plosca[i] == Polje.Bela || (plosca[i] == Polje.Crna && plosca[i].steviloZetonov == 1)) 
+					if (plosca[i].polje == Polje.PRAZNO || plosca[i].polje == Polje.Bela || (plosca[i].polje == Polje.Crna && plosca[i].steviloZetonov == 1)) 
 						{moznePoteze.add(new Poteza(26, i));}
 				}
 			}
 			else {
 				boolean cetrtiKvadrant = true;
 				for (int polje = 1; polje < 25; polje++) {
-					if (plosca[polje] == Polje.Bela) {
+					if (plosca[polje].polje == Polje.Bela) {
 						if (polje < 19) {cetrtiKvadrant = false;}
 						for (int met : meti) {
 							if (cetrtiKvadrant || polje + met < 25) {
-								if (plosca[polje + met] == Polje.Crna && plosca[polje + met].steviloZetonov > 1) {
+								if (plosca[polje + met].polje == Polje.Crna && plosca[polje + met].steviloZetonov > 1) {
 									continue;
 								}
 								else {
@@ -117,18 +118,18 @@ public class Igra {
 		else if (naPotezi == Igralec.Crna) {
 			if (plosca[27].steviloZetonov > 0) {
 				for (int i: meti) {
-					if (plosca[25 - i] == Polje.PRAZNO || plosca[25 - i] == Polje.Crna || (plosca[25 - i] == Polje.Bela && plosca[25 - i].steviloZetonov == 1)) 
+					if (plosca[25 - i].polje == Polje.PRAZNO || plosca[25 - i].polje == Polje.Crna || (plosca[25 - i].polje == Polje.Bela && plosca[25 - i].steviloZetonov == 1)) 
 						{moznePoteze.add(new Poteza(27, 25 - i));}
 				}
 			}
 			else {
 				boolean prviKvadrant = true;
 				for (int polje = 24; polje > 0; polje--) {
-					if (plosca[polje] == Polje.Crna) {
+					if (plosca[polje].polje == Polje.Crna) {
 						if (polje > 6) {prviKvadrant = false;}
 						for (int met : meti) {
 							if (prviKvadrant || polje - met > 0) {
-								if (plosca[polje - met] == Polje.Bela && plosca[polje - met].steviloZetonov > 1) {
+								if (plosca[polje - met].polje == Polje.Bela && plosca[polje - met].steviloZetonov > 1) {
 									continue;
 								}
 								else {
@@ -148,7 +149,7 @@ public class Igra {
 		if (zacetek < 10) {barva = Polje.Crna;}
 		else {barva = Polje.Bela;}
 		for (int i = zacetek; i < konec + 1; i++) {
-			if (plosca[i] == barva && plosca[i].steviloZetonov > 1) {continue;}
+			if (plosca[i].polje == barva && plosca[i].steviloZetonov > 1) {continue;}
 			else {return false;}
 		}
 		return true;
@@ -171,21 +172,21 @@ public class Igra {
 		else {
 			plosca[polje].steviloZetonov = 0;
 			if (polje < 25) {
-				plosca[polje] = Polje.PRAZNO;
+				plosca[polje].polje = Polje.PRAZNO;
 			}
 		}
 	}
 	
 	public void dodajZeton(int polje) {
-		if (plosca[polje] == Polje.PRAZNO) {
-			plosca[polje] = naPotezi.getPolje();
+		if (plosca[polje].polje == Polje.PRAZNO) {
+			plosca[polje].polje = naPotezi.getPolje();
 			plosca[polje].steviloZetonov = 1;
 		}
-		else if (plosca[polje] == naPotezi.getPolje()) {
+		else if (plosca[polje].polje == naPotezi.getPolje()) {
 			plosca[polje].steviloZetonov += 1;
 		}
 		else {
-			plosca[polje] = naPotezi.getPolje();
+			plosca[polje].polje = naPotezi.getPolje();
 			plosca[polje].steviloZetonov = 1;
 			if (naPotezi == Igralec.Crna) {
 				plosca[26].steviloZetonov += 1;

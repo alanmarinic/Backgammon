@@ -1,8 +1,8 @@
 package splosno;
 
 public class PoljeInZetoni {
-	Polje polje;
-	int steviloZetonov;
+	public Polje polje;
+	public int steviloZetonov;
 	
 	public PoljeInZetoni (Polje polje, int steviloZetonov) {
 		this.polje = polje;
