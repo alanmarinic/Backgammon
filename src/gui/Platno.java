@@ -5,14 +5,17 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 import javax.swing.JPanel;
 
 import splosno.Vodja;
 import splosno.Polje;
+import splosno.Poteza;
 
 @SuppressWarnings("serial")
-public class Platno extends JPanel {
+public class Platno extends JPanel implements MouseListener{
 	
 	public Platno() {
 		setBackground(Color.PINK);
@@ -43,7 +46,7 @@ public class Platno extends JPanel {
 	
 	
 	
-	// Relativni prostor okoli X in O
+	// Relativni prostor okoli zetonov
 	private final static double PADDING = 0.18;
 	
 	
@@ -54,7 +57,7 @@ public class Platno extends JPanel {
 		double premer = spice/3;
 		double rob = rob();
 		double skatlice = skatlice();
-		if (polje < 12) { 
+		if (polje < 13) { 
 			y = getHeight() - rob - premer - (0.5 * LINE_WIDTH + PADDING);
 		}
 		else {
@@ -133,14 +136,14 @@ public class Platno extends JPanel {
 		double x1 = 3 * rob + 7 * spice;
 		double x2 = x1 + 2 * premer;
 		g2.setColor(Color.RED);
-		g2.drawRoundRect((int)x1, (int)y, (int)premer, (int)premer, (int)premer/4, (int)premer/4);
-		g2.drawRoundRect((int)x2, (int)y, (int)premer, (int)premer, (int)premer/4, (int)premer/4);
+		g2.fillRoundRect((int)x1, (int)y, (int)premer, (int)premer, (int)premer/4, (int)premer/4);
+		g2.fillRoundRect((int)x2, (int)y, (int)premer, (int)premer, (int)premer/4, (int)premer/4);
 		paintPike(g2, prva, x1, y, premer);
 		paintPike(g2, druga, x2, y, premer);
 		if (prva == druga) {
 			g2.setColor(Color.RED);
-			g2.drawRoundRect((int)(x2 + 2*premer), (int)y, (int)premer, (int)premer, (int)premer/4, (int)premer/4);
-			g2.drawRoundRect((int)(x2 + 4*premer), (int)y, (int)premer, (int)premer, (int)premer/4, (int)premer/4);
+			g2.fillRoundRect((int)(x2 + 2*premer), (int)y, (int)premer, (int)premer, (int)premer/4, (int)premer/4);
+			g2.fillRoundRect((int)(x2 + 4*premer), (int)y, (int)premer, (int)premer, (int)premer/4, (int)premer/4);
 			paintPike(g2, prva, x2 + 2*premer, y, premer);
 			paintPike(g2, prva, x2 + 4*premer, y, premer);
 		}
@@ -150,33 +153,43 @@ public class Platno extends JPanel {
 		double polmerPike = premer / 10;
 		g2.setColor(Color.WHITE);
 		switch (stPik) {
-		case 1: g2.drawOval((int)(x + premer/2 - polmerPike), (int)(y + premer/2 - polmerPike), (int)polmerPike * 2, (int)polmerPike * 2);
+		case 1: g2.fillOval((int)(x + premer/2 - polmerPike), (int)(y + premer/2 - polmerPike), (int)polmerPike * 2, (int)polmerPike * 2);
+			break;
 		case 2: 
-			g2.drawOval((int)(x + polmerPike), (int)(y + polmerPike), (int)polmerPike * 2, (int)polmerPike * 2);
-			g2.drawOval((int)(x + premer - 3 * polmerPike), (int)(y + premer - 3 * polmerPike), (int)polmerPike * 2, (int)polmerPike * 2);
-		case 3:
-			g2.drawOval((int)(x + polmerPike), (int)(y + polmerPike), (int)polmerPike * 2, (int)polmerPike * 2);
-			g2.drawOval((int)(x + 4 * polmerPike), (int)(y + 4 * polmerPike), (int)polmerPike * 2, (int)polmerPike * 2);
-			g2.drawOval((int)(x + premer - 3 * polmerPike), (int)(y + premer - 3 * polmerPike), (int)polmerPike * 2, (int)polmerPike * 2);
-		case 4:
-			g2.drawOval((int)(x + polmerPike), (int)(y + polmerPike), (int)polmerPike * 2, (int)polmerPike * 2);
-			g2.drawOval((int)(x + premer - 3 * polmerPike), (int)(y + polmerPike), (int)polmerPike * 2, (int)polmerPike * 2);
-			g2.drawOval((int)(x + polmerPike), (int)(y + premer - 3 * polmerPike), (int)polmerPike * 2, (int)polmerPike * 2);
-			g2.drawOval((int)(x + premer - 3 * polmerPike), (int)(y + premer - 3 * polmerPike), (int)polmerPike * 2, (int)polmerPike * 2);
-		case 5:
-			g2.drawOval((int)(x + polmerPike), (int)(y + polmerPike), (int)polmerPike * 2, (int)polmerPike * 2);
-			g2.drawOval((int)(x + premer - 3 * polmerPike), (int)(y + polmerPike), (int)polmerPike * 2, (int)polmerPike * 2);
-			g2.drawOval((int)(x + polmerPike), (int)(y + premer - 3 * polmerPike), (int)polmerPike * 2, (int)polmerPike * 2);
-			g2.drawOval((int)(x + premer - 3 * polmerPike), (int)(y + premer - 3 * polmerPike), (int)polmerPike * 2, (int)polmerPike * 2);
-			g2.drawOval((int)(x + 4 * polmerPike), (int)(y + 4 * polmerPike), (int)polmerPike * 2, (int)polmerPike * 2);
-		case 6:
+			g2.fillOval((int)(x + polmerPike), (int)(y + polmerPike), (int)polmerPike * 2, (int)polmerPike * 2);
+			g2.fillOval((int)(x + premer - 3 * polmerPike), (int)(y + premer - 3 * polmerPike), (int)polmerPike * 2, (int)polmerPike * 2);
+			break;
 
-			g2.drawOval((int)(x + polmerPike), (int)(y + polmerPike), (int)polmerPike * 2, (int)polmerPike * 2);
-			g2.drawOval((int)(x + premer - 3 * polmerPike), (int)(y + polmerPike), (int)polmerPike * 2, (int)polmerPike * 2);
-			g2.drawOval((int)(x + polmerPike), (int)(y + premer - 3 * polmerPike), (int)polmerPike * 2, (int)polmerPike * 2);
-			g2.drawOval((int)(x + premer - 3 * polmerPike), (int)(y + premer - 3 * polmerPike), (int)polmerPike * 2, (int)polmerPike * 2);
-			g2.drawOval((int)(x + polmerPike), (int)(y + 4 * polmerPike), (int)polmerPike * 2, (int)polmerPike * 2);
-			g2.drawOval((int)(x + premer - 3 * polmerPike), (int)(y + 4 * polmerPike), (int)polmerPike * 2, (int)polmerPike * 2);			
+		case 3:
+			g2.fillOval((int)(x + polmerPike), (int)(y + polmerPike), (int)polmerPike * 2, (int)polmerPike * 2);
+			g2.fillOval((int)(x + 4 * polmerPike), (int)(y + 4 * polmerPike), (int)polmerPike * 2, (int)polmerPike * 2);
+			g2.fillOval((int)(x + premer - 3 * polmerPike), (int)(y + premer - 3 * polmerPike), (int)polmerPike * 2, (int)polmerPike * 2);
+			break;
+
+		case 4:
+			g2.fillOval((int)(x + polmerPike), (int)(y + polmerPike), (int)polmerPike * 2, (int)polmerPike * 2);
+			g2.fillOval((int)(x + premer - 3 * polmerPike), (int)(y + polmerPike), (int)polmerPike * 2, (int)polmerPike * 2);
+			g2.fillOval((int)(x + polmerPike), (int)(y + premer - 3 * polmerPike), (int)polmerPike * 2, (int)polmerPike * 2);
+			g2.fillOval((int)(x + premer - 3 * polmerPike), (int)(y + premer - 3 * polmerPike), (int)polmerPike * 2, (int)polmerPike * 2);
+			break;
+
+		case 5:
+			g2.fillOval((int)(x + polmerPike), (int)(y + polmerPike), (int)polmerPike * 2, (int)polmerPike * 2);
+			g2.fillOval((int)(x + premer - 3 * polmerPike), (int)(y + polmerPike), (int)polmerPike * 2, (int)polmerPike * 2);
+			g2.fillOval((int)(x + polmerPike), (int)(y + premer - 3 * polmerPike), (int)polmerPike * 2, (int)polmerPike * 2);
+			g2.fillOval((int)(x + premer - 3 * polmerPike), (int)(y + premer - 3 * polmerPike), (int)polmerPike * 2, (int)polmerPike * 2);
+			g2.fillOval((int)(x + 4 * polmerPike), (int)(y + 4 * polmerPike), (int)polmerPike * 2, (int)polmerPike * 2);
+			break;
+
+		case 6:
+			g2.fillOval((int)(x + polmerPike), (int)(y + polmerPike), (int)polmerPike * 2, (int)polmerPike * 2);
+			g2.fillOval((int)(x + premer - 3 * polmerPike), (int)(y + polmerPike), (int)polmerPike * 2, (int)polmerPike * 2);
+			g2.fillOval((int)(x + polmerPike), (int)(y + premer - 3 * polmerPike), (int)polmerPike * 2, (int)polmerPike * 2);
+			g2.fillOval((int)(x + premer - 3 * polmerPike), (int)(y + premer - 3 * polmerPike), (int)polmerPike * 2, (int)polmerPike * 2);
+			g2.fillOval((int)(x + polmerPike), (int)(y + 4 * polmerPike), (int)polmerPike * 2, (int)polmerPike * 2);
+			g2.fillOval((int)(x + premer - 3 * polmerPike), (int)(y + 4 * polmerPike), (int)polmerPike * 2, (int)polmerPike * 2);	
+			break;
+
 		}
 	}
 	
@@ -216,7 +229,10 @@ public class Platno extends JPanel {
 		Polje[] plosca;
 		if (Vodja.igra != null) {
 			plosca = Vodja.igra.getPlosca();
+			plosca[8].steviloZetonov = 3;
+
 			for (int i = 0; i < 28; i++) {
+				System.out.print(plosca[i].steviloZetonov);
 				switch(plosca[i]) {
 				case Bela: paintBela(g2, i, plosca[i].steviloZetonov); break;
 				case Crna: paintCrna(g2, i, plosca[i].steviloZetonov); break;
@@ -224,6 +240,90 @@ public class Platno extends JPanel {
 				}
 			}
 		}
+		
+		//kocke
+		if (Vodja.igra != null) {
+			paintKocke(g2, Vodja.prviMet, Vodja.drugiMet);
+		}
+		//na zacetku ce oba vrzeta isto, so 4 kocke
+	}
+	
+	private int zacetnoPolje = -1;
+
+	// Odziv ob kliku z miško - odigra človekovo potezo
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		if (Vodja.clovekNaVrsti) {
+			int x = e.getX();
+			int y = e.getY();
+			double rob = rob();
+			double spice = spice();
+			double skatlice = skatlice();
+			int polje = -1;
+			
+			if (y > rob && y < getHeight()/2 - rob) {
+				if (x > rob && x < rob + 6 * spice) {
+					polje = (int)((x - rob) / spice) + 13;
+				}
+				if (x > 3 * rob + 6 * spice && x < 3 * rob + 12 * spice) {
+					polje = (int)((x - 3 * rob) / spice) + 13;
+				}
+				if (x > rob + 6 * spice && x < 3 * rob + 6 * spice) {
+					polje = 27;
+				}
+				if (x > 4 * rob + 12 * spice && x < 4 * rob + 12 * spice + skatlice) {
+					polje = 25;
+				}
+			}
+			else if (y > getHeight()/2 + rob && y < getHeight() - rob) {
+				if (x > rob && x < rob + 6 * spice) {
+					polje = 12 - (int)((x - rob) / spice);
+				}
+				if (x > 3 * rob + 6 * spice && x < 3 * rob + 12 * spice) {
+					polje = 12 - (int)((x - 3 * rob) / spice);
+				}
+				if (x > rob + 6 * spice && x < 3 * rob + 6 * spice) {
+					polje = 26;
+				}
+				if (x > 4 * rob + 12 * spice && x < 4 * rob + 12 * spice + skatlice) {
+					polje = 0;
+				}
+			}
+			
+			if (polje != -1) {
+				if (zacetnoPolje == -1) {
+					zacetnoPolje = polje;
+				}
+				else {
+					Vodja.igrajClovekovoPotezo(new Poteza(zacetnoPolje, polje));
+					zacetnoPolje = -1;
+				}
+			}
+		}
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 }
 

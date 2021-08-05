@@ -1,9 +1,6 @@
 package splosno;
 
 public enum Polje {
-	 Bela, Crna, PRAZNO;
-	 
-	 public int steviloZetonov;
-	 
+	 Bela, Crna, PRAZNO;	 
 	}
 

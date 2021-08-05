@@ -1,5 +1,6 @@
 package splosno;
 
+import java.awt.Graphics2D;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -10,7 +11,7 @@ import gui.Okno;
 public class Vodja {
 
 	public static Map<Igralec, VrstaIgralca> vrstaIgralca;
-	public static Map<Igralec, KdoIgra> kdoIgra;
+	//public static Map<Igralec, KdoIgra> kdoIgra;
 	
 	public static Okno okno;
 
@@ -20,6 +21,9 @@ public class Vodja {
 	public static KdoIgra racunalnikovaInteligenca;
 	
 	private static final Random RANDOM = new Random();
+	
+	public static int prviMet;
+	public static int drugiMet;
 
 	public static void igramoNovoIgro () {
 		igra = new Igra ();
@@ -48,8 +52,8 @@ public class Vodja {
 	}
 	
 	public static void igrajRacunalnikovoPotezo() {
-		int prviMet = Igra.metKocke();
-		int drugiMet = Igra.metKocke();
+		prviMet = Igra.metKocke();
+		drugiMet = Igra.metKocke();
 		int[] meti;
 		if (prviMet == drugiMet) {
 			meti = new int[] {prviMet, prviMet, prviMet, prviMet};
@@ -60,8 +64,6 @@ public class Vodja {
 		Poteza poteza = moznePoteze.get(i);
 		igra.odigraj(poteza);
 		igramo ();
-		
-
 	}
 	
 	public static void igrajClovekovoPotezo(Poteza poteza) {

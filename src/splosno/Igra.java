@@ -22,12 +22,14 @@ public class Igra {
 	public Igralec kdoZacne() {
 		int bela = metKocke();
 		int crna = metKocke();
+		Vodja.prviMet = bela;
+		Vodja.drugiMet = crna;
 		if (bela > crna) {
-			System.out.println("Zacne beli, ki je vrgel" + bela);
+			System.out.println("Zacne beli, ki je vrgel " + bela);
 			return Igralec.Bela;
 		}
 		else if (bela < crna) {
-			System.out.println("Zacne crni, ki je vrgel" + crna);
+			System.out.println("Zacne crni, ki je vrgel " + crna);
 			return Igralec.Crna;
 		}
 		else {return kdoZacne();}	
@@ -39,7 +41,7 @@ public class Igra {
 	
 	
 	public Igra() {
-		plosca = new Polje[28];
+		plosca = new PoljeInZetoni[28];
 		//polji 0 in 25 predstavljata skatlico. 0 od crnih in 25 od belih
 		//polji 26 in 27 predstavljata sredinsko polje z zbitimi zetoni. 26 od belih in 27 od crnih 
 		List<Integer> bele = Arrays.asList(1, 12, 17, 19, 25, 26);
@@ -47,8 +49,8 @@ public class Igra {
 		for (int i = 0; i < 28; i++) {
 			if (bele.contains(i)) {plosca[i] = Polje.Bela;}
 			else if (crne.contains(i)) {plosca[i] = Polje.Crna;}
-			else {plosca[i] = Polje.PRAZNO;}
-			plosca[i].steviloZetonov = 0;
+			else {plosca[i] = Polje.PRAZNO;
+				plosca[i].steviloZetonov = 0;}
 		}
 		plosca[0].steviloZetonov = 0;
 		plosca[1].steviloZetonov = 2;

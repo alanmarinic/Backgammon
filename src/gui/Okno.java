@@ -95,46 +95,46 @@ public class Okno extends JFrame implements ActionListener {
 				Vodja.vrstaIgralca = new EnumMap<Igralec,VrstaIgralca>(Igralec.class);
 				Vodja.vrstaIgralca.put(Igralec.Crna, VrstaIgralca.C);
 				Vodja.vrstaIgralca.put(Igralec.Bela, VrstaIgralca.R);
-				String ime = JOptionPane.showInputDialog(this, "Vnesi ime");
-				Vodja.kdoIgra = new EnumMap<Igralec,KdoIgra>(Igralec.class);
-				Vodja.kdoIgra.put(Igralec.Crna, new KdoIgra(ime));
-				Vodja.kdoIgra.put(Igralec.Bela, Vodja.racunalnikovaInteligenca);
+				//String ime = JOptionPane.showInputDialog(this, "Vnesi ime");
+				//Vodja.kdoIgra = new EnumMap<Igralec,KdoIgra>(Igralec.class);
+				//Vodja.kdoIgra.put(Igralec.Crna, new KdoIgra(ime));
+				//Vodja.kdoIgra.put(Igralec.Bela, Vodja.racunalnikovaInteligenca);
 				Vodja.igramoNovoIgro();
 			}
 			else if (e.getSource() == igraRacunalnikClovek) {
 				Vodja.vrstaIgralca = new EnumMap<Igralec,VrstaIgralca>(Igralec.class);
 				Vodja.vrstaIgralca.put(Igralec.Crna, VrstaIgralca.R);
 				Vodja.vrstaIgralca.put(Igralec.Bela, VrstaIgralca.C);
-				String ime = JOptionPane.showInputDialog(this, "Vnesi ime");
-				Vodja.kdoIgra = new EnumMap<Igralec,KdoIgra>(Igralec.class);
-				Vodja.kdoIgra.put(Igralec.Crna, Vodja.racunalnikovaInteligenca);
-				Vodja.kdoIgra.put(Igralec.Bela, new KdoIgra(ime));
+				//String ime = JOptionPane.showInputDialog(this, "Vnesi ime");
+				//Vodja.kdoIgra = new EnumMap<Igralec,KdoIgra>(Igralec.class);
+				//Vodja.kdoIgra.put(Igralec.Crna, Vodja.racunalnikovaInteligenca);
+				//Vodja.kdoIgra.put(Igralec.Bela, new KdoIgra(ime));
 				Vodja.igramoNovoIgro();
 			}
 			else if (e.getSource() == igraClovekClovek) {
 				Vodja.vrstaIgralca = new EnumMap<Igralec,VrstaIgralca>(Igralec.class);
 				Vodja.vrstaIgralca.put(Igralec.Crna, VrstaIgralca.C);
 				Vodja.vrstaIgralca.put(Igralec.Bela, VrstaIgralca.C);
-				JTextField ime_1 = new JTextField();
-				JTextField ime_2 = new JTextField();
-				JComponent[] polja = {
-						new JLabel("Vnesite prvo ime"), ime_1,
-						new JLabel("Vnesite drugo ime"), ime_2,
-				};
-				int izbira = JOptionPane.showConfirmDialog(this, polja, "Input", JOptionPane.OK_CANCEL_OPTION);
-				if (izbira == JOptionPane.OK_OPTION) {}
-				Vodja.kdoIgra = new EnumMap<Igralec,KdoIgra>(Igralec.class);
-				Vodja.kdoIgra.put(Igralec.Bela, new KdoIgra(ime_1.getText()));
-				Vodja.kdoIgra.put(Igralec.Crna, new KdoIgra(ime_2.getText())); 
+				//JTextField ime_1 = new JTextField();
+				//JTextField ime_2 = new JTextField();
+				//JComponent[] polja = {
+					//	new JLabel("Vnesite prvo ime"), ime_1,
+						//new JLabel("Vnesite drugo ime"), ime_2,
+				//};
+				//int izbira = JOptionPane.showConfirmDialog(this, polja, "Input", JOptionPane.OK_CANCEL_OPTION);
+				//if (izbira == JOptionPane.OK_OPTION) {}
+				//Vodja.kdoIgra = new EnumMap<Igralec,KdoIgra>(Igralec.class);
+				//Vodja.kdoIgra.put(Igralec.Bela, new KdoIgra(ime_1.getText()));
+				//Vodja.kdoIgra.put(Igralec.Crna, new KdoIgra(ime_2.getText())); 
 				Vodja.igramoNovoIgro();
 			}
 			else if (e.getSource() == igraRacunalnikRacunalnik) {
 				Vodja.vrstaIgralca = new EnumMap<Igralec,VrstaIgralca>(Igralec.class);
 				Vodja.vrstaIgralca.put(Igralec.Crna, VrstaIgralca.R);
 				Vodja.vrstaIgralca.put(Igralec.Bela, VrstaIgralca.R);
-				Vodja.kdoIgra = new EnumMap<Igralec,KdoIgra>(Igralec.class);
-				Vodja.kdoIgra.put(Igralec.Crna, Vodja.racunalnikovaInteligenca);
-				Vodja.kdoIgra.put(Igralec.Bela, Vodja.racunalnikovaInteligenca);
+				//Vodja.kdoIgra = new EnumMap<Igralec,KdoIgra>(Igralec.class);
+				//Vodja.kdoIgra.put(Igralec.Crna, Vodja.racunalnikovaInteligenca);
+				//Vodja.kdoIgra.put(Igralec.Bela, Vodja.racunalnikovaInteligenca);
 				Vodja.igramoNovoIgro();
 			}
 	}
@@ -149,17 +149,14 @@ public class Okno extends JFrame implements ActionListener {
 			switch(Vodja.igra.stanje()) {
 			case NEODLOCENO: status.setText("Neodločeno!"); break;
 			case V_TEKU: 
-				status.setText("Na potezi je " + Vodja.igra.naPotezi() + 
-						" - " + Vodja.kdoIgra.get(Vodja.igra.naPotezi()).ime()); 
+				status.setText("Na potezi je " + Vodja.igra.naPotezi()); 
 				break;
 			case ZMAGA_CRNA: 
-				status.setText("Zmagal je Črni - " + 
-						Vodja.kdoIgra.get(Vodja.igra.naPotezi().nasprotnik()).ime());
+				status.setText("Zmagal je Črni");
 				
 				break;
 			case ZMAGA_BELA: 
-				status.setText("Zmagal je Beli - " + 
-						Vodja.kdoIgra.get(Vodja.igra.naPotezi().nasprotnik()).ime());
+				status.setText("Zmagal je Beli");
 				break;
 			}
 		}
