@@ -50,8 +50,6 @@ public class Igra {
 			plosca[i] = new PoljeInZetoni(Polje.PRAZNO, 0);
 			if (bele.contains(i)) {plosca[i].polje = Polje.Bela;}
 			else if (crne.contains(i)) {plosca[i].polje = Polje.Crna;}
-			//else {plosca[i].polje = Polje.PRAZNO;}
-			//plosca[i].steviloZetonov = 0;
 		}
 		plosca[0].steviloZetonov = 0;
 		plosca[1].steviloZetonov = 2;
@@ -200,13 +198,19 @@ public class Igra {
 	public boolean odigraj(Poteza poteza) {
 		//pogledamo, ce je poteza veljavna
 		//ce je pocasen, odstrani primer za racunalnik
-		int[] met = new int[] {Math.abs(poteza.koncnoPolje - poteza.zacetnoPolje)};
-		List<Poteza> moznePoteze = moznePoteze(met);
+		List<Poteza> moznePoteze = moznePoteze(Vodja.meti);
+		System.out.println("mozne poteze: ");
+		Vodja.izpisiSeznamPotez(moznePoteze);
+		System.out.println("nasa poteza: " + poteza.zacetnoPolje + "-" + poteza.koncnoPolje);
+		System.out.println(moznePoteze.contains(poteza));
 		if (moznePoteze.contains(poteza)) {
+			System.out.println("poteza veljavna");
+
 			//izbrisemo zacetni zeton
 			izbrisiZeton(poteza.zacetnoPolje);
 			//dodamo zeton na koncnem polju
 			dodajZeton(poteza.koncnoPolje);
+			Vodja.meti = odstraniMet(Vodja.meti, Math.abs(poteza.zacetnoPolje - poteza.koncnoPolje));
 			return true;
 		}
 		else {
@@ -214,13 +218,18 @@ public class Igra {
 		}
 	}
 	
-	
-	
-	
-	
-	
-	
-	
+	public int[] odstraniMet(int[] meti, int met) {
+		System.out.println(meti.toString());
+		for (int i = 0; i < meti.length; i++) {
+			if (meti[i] == met) {
+				System.out.println(Arrays.asList(meti).remove(i).toString());
+				return Arrays.asList(meti).remove(i);
+			}
+		}
+		return meti;
+	}
+		
+		
 	
 	
 }

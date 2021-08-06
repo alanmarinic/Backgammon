@@ -24,6 +24,7 @@ public class Vodja {
 	
 	public static int prviMet;
 	public static int drugiMet;
+	public static int[] meti;
 
 	public static void igramoNovoIgro () {
 		igra = new Igra ();
@@ -37,12 +38,20 @@ public class Vodja {
 		case ZMAGA_BELA: 
 		case NEODLOCENO: 
 			return; // odhajamo iz metode igramo
-		case V_TEKU: 
+		case V_TEKU:
 			Igralec igralec = igra.naPotezi();
 			VrstaIgralca vrstaNaPotezi = vrstaIgralca.get(igralec);
 			switch (vrstaNaPotezi) {
 			case C: 
+				System.out.println("clovek");
 				clovekNaVrsti = true;
+				prviMet = Igra.metKocke();
+				drugiMet = Igra.metKocke();
+				if (prviMet == drugiMet) {
+					meti = new int[] {prviMet, prviMet, prviMet, prviMet};
+				}
+				else {meti = new int[] {prviMet, drugiMet};}
+				izpisiSeznam(meti);
 				break;
 			case R:
 				igrajRacunalnikovoPotezo();
@@ -54,20 +63,40 @@ public class Vodja {
 	public static void igrajRacunalnikovoPotezo() {
 		prviMet = Igra.metKocke();
 		drugiMet = Igra.metKocke();
-		int[] meti;
 		if (prviMet == drugiMet) {
 			meti = new int[] {prviMet, prviMet, prviMet, prviMet};
 		}
 		else {meti = new int[] {prviMet, drugiMet};}
-		List<Poteza> moznePoteze = Igra.moznePoteze(meti);
-		int i = RANDOM.nextInt(moznePoteze.size());	
-		Poteza poteza = moznePoteze.get(i);
-		igra.odigraj(poteza);
+		int dolzina = meti.length;
+		for (int j = 0; j < dolzina; j ++) {
+			List<Poteza> moznePoteze = Igra.moznePoteze(meti);
+			int i = RANDOM.nextInt(moznePoteze.size());	
+			Poteza poteza = moznePoteze.get(i);
+			igra.odigraj(poteza);
+		}
+		Igra.naPotezi = Igra.naPotezi.nasprotnik();
 		igramo ();
 	}
 	
 	public static void igrajClovekovoPotezo(Poteza poteza) {
-		if (igra.odigraj(poteza)) clovekNaVrsti = false;
-		igramo ();
+		igra.odigraj(poteza);
+		okno.osveziGUI();
+		System.out.println("" + poteza.zacetnoPolje + poteza.koncnoPolje);
+		if (meti == new int[0]) {
+			clovekNaVrsti = false;
+			Igra.naPotezi = Igra.naPotezi.nasprotnik();
+			igramo ();
+		}
+		
 	}	
+	
+	public static void izpisiSeznam(int[] seznam) {
+		for (int i : seznam) System.out.print(i + " ");
+		System.out.println();
+	}
+	
+	public static void izpisiSeznamPotez(List<Poteza> seznam) {
+		for (Poteza i : seznam) System.out.print(i.zacetnoPolje + "-" + i.koncnoPolje + " ");
+		System.out.println();
+	}
 }

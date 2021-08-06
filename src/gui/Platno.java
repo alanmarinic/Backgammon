@@ -20,6 +20,7 @@ public class Platno extends JPanel implements MouseListener{
 	
 	public Platno() {
 		setBackground(Color.PINK);
+		this.addMouseListener(this);
 	}
 	
 	@Override
@@ -232,7 +233,6 @@ public class Platno extends JPanel implements MouseListener{
 			plosca = Vodja.igra.getPlosca();
 
 			for (int i = 0; i < 28; i++) {
-				System.out.print(plosca[i].steviloZetonov);
 				switch(plosca[i].polje) {
 				case Bela: paintBela(g2, i, plosca[i].steviloZetonov); break;
 				case Crna: paintCrna(g2, i, plosca[i].steviloZetonov); break;
@@ -289,12 +289,13 @@ public class Platno extends JPanel implements MouseListener{
 					polje = 0;
 				}
 			}
-			
+			System.out.println(polje);
 			if (polje != -1) {
 				if (zacetnoPolje == -1) {
 					zacetnoPolje = polje;
 				}
 				else {
+					
 					Vodja.igrajClovekovoPotezo(new Poteza(zacetnoPolje, polje));
 					zacetnoPolje = -1;
 				}
