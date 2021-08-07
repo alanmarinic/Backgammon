@@ -70,6 +70,9 @@ public class Vodja {
 		int dolzina = meti.length;
 		for (int j = 0; j < dolzina; j ++) {
 			List<Poteza> moznePoteze = Igra.moznePoteze(meti);
+			if (moznePoteze.size() == 0) {
+				break;
+			}
 			int i = RANDOM.nextInt(moznePoteze.size());	
 			Poteza poteza = moznePoteze.get(i);
 			igra.odigraj(poteza);
@@ -81,8 +84,7 @@ public class Vodja {
 	public static void igrajClovekovoPotezo(Poteza poteza) {
 		igra.odigraj(poteza);
 		okno.osveziGUI();
-		System.out.println("" + poteza.zacetnoPolje + poteza.koncnoPolje);
-		if (meti == new int[0]) {
+		if (meti.length == 0) {
 			clovekNaVrsti = false;
 			Igra.naPotezi = Igra.naPotezi.nasprotnik();
 			igramo ();

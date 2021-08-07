@@ -8,5 +8,11 @@ public class Poteza {
 		this.zacetnoPolje = zacetnoPolje;
 		this.koncnoPolje = koncnoPolje;
 	}
+	
+	
+	
+	
+	
+	
 
 }

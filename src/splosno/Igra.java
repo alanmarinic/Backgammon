@@ -100,14 +100,14 @@ public class Igra {
 					if (plosca[polje].polje == Polje.Bela) {
 						if (polje < 19) {cetrtiKvadrant = false;}
 						for (int met : meti) {
-							if (cetrtiKvadrant || polje + met < 25) {
+							if (polje + met < 25) {
 								if (plosca[polje + met].polje == Polje.Crna && plosca[polje + met].steviloZetonov > 1) {
 									continue;
 								}
-								else {
-									moznePoteze.add(new Poteza(polje, Math.min(25, polje + met)));
-								}
+								else moznePoteze.add(new Poteza(polje, polje + met));
 							}
+							else if (cetrtiKvadrant) {moznePoteze.add(new Poteza(polje, 25));}
+							
 						}
 					}
 				}
@@ -126,14 +126,13 @@ public class Igra {
 					if (plosca[polje].polje == Polje.Crna) {
 						if (polje > 6) {prviKvadrant = false;}
 						for (int met : meti) {
-							if (prviKvadrant || polje - met > 0) {
+							if (polje - met > 0) {
 								if (plosca[polje - met].polje == Polje.Bela && plosca[polje - met].steviloZetonov > 1) {
 									continue;
 								}
-								else {
-									moznePoteze.add(new Poteza(polje, Math.max(0, polje - met)));
-								}
+								else moznePoteze.add(new Poteza(polje, polje - met));
 							}
+							else if (prviKvadrant) {moznePoteze.add(new Poteza(polje, 0));}
 						}
 					}
 				}
@@ -202,15 +201,20 @@ public class Igra {
 		System.out.println("mozne poteze: ");
 		Vodja.izpisiSeznamPotez(moznePoteze);
 		System.out.println("nasa poteza: " + poteza.zacetnoPolje + "-" + poteza.koncnoPolje);
-		System.out.println(moznePoteze.contains(poteza));
-		if (moznePoteze.contains(poteza)) {
+		System.out.println(vsebuje(moznePoteze, poteza));
+		if (vsebuje(moznePoteze, poteza)) {
 			System.out.println("poteza veljavna");
 
 			//izbrisemo zacetni zeton
 			izbrisiZeton(poteza.zacetnoPolje);
 			//dodamo zeton na koncnem polju
 			dodajZeton(poteza.koncnoPolje);
-			Vodja.meti = odstraniMet(Vodja.meti, Math.abs(poteza.zacetnoPolje - poteza.koncnoPolje));
+			//Vodja.izpisiSeznam(Vodja.meti);
+			//izbrisemo met iz seznam metov
+			if (poteza.zacetnoPolje == 26) Vodja.meti = odstraniMet(Vodja.meti, poteza.koncnoPolje);
+			else if (poteza.zacetnoPolje == 27) Vodja.meti = odstraniMet(Vodja.meti, 25 - poteza.koncnoPolje);
+			else Vodja.meti = odstraniMet(Vodja.meti, Math.abs(poteza.zacetnoPolje - poteza.koncnoPolje));
+			//Vodja.izpisiSeznam(Vodja.meti);
 			return true;
 		}
 		else {
@@ -218,15 +222,30 @@ public class Igra {
 		}
 	}
 	
-	public int[] odstraniMet(int[] meti, int met) {
-		System.out.println(meti.toString());
-		for (int i = 0; i < meti.length; i++) {
-			if (meti[i] == met) {
-				System.out.println(Arrays.asList(meti).remove(i).toString());
-				return Arrays.asList(meti).remove(i);
+	public boolean vsebuje(List<Poteza> list, Poteza poteza) {
+		for (Poteza vrednost: list) {
+			if (vrednost.zacetnoPolje == poteza.zacetnoPolje && vrednost.koncnoPolje == poteza.koncnoPolje) {
+				return true;
 			}
 		}
-		return meti;
+		return false;
+	}
+	
+	public int[] odstraniMet(int[] meti, int met) {
+		Vodja.izpisiSeznam(meti);
+		List<Integer> novi = new ArrayList<>();
+		boolean nadaljuj = true;
+		for (int i : meti) {
+			if (i == met && nadaljuj) {
+				nadaljuj = false;
+			}
+			else novi.add(i);
+		}
+		int[] array = new int[novi.size()];
+		for(int i = 0; i < novi.size(); i++) array[i] = novi.get(i);
+		Vodja.izpisiSeznam(array);
+		return array;
+
 	}
 		
 		
