@@ -11,14 +11,12 @@ import gui.Okno;
 public class Vodja {
 
 	public static Map<Igralec, VrstaIgralca> vrstaIgralca;
-	//public static Map<Igralec, KdoIgra> kdoIgra;
 	
 	public static Okno okno;
 
 	public static Igra igra = null;
 	
 	public static boolean clovekNaVrsti = false;
-	public static KdoIgra racunalnikovaInteligenca;
 	
 	private static final Random RANDOM = new Random();
 	
