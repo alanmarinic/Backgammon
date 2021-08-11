@@ -141,24 +141,11 @@ public class Igra {
 		return moznePoteze;
 	}
 	
-	public boolean neodlocenoPogoj(int zacetek, int konec) {
-		Polje barva;
-		if (zacetek < 10) {barva = Polje.Crna;}
-		else {barva = Polje.Bela;}
-		for (int i = zacetek; i < konec + 1; i++) {
-			if (plosca[i].polje == barva && plosca[i].steviloZetonov > 1) {continue;}
-			else {return false;}
-		}
-		return true;
-	}
 	
 	public Stanje stanje() {
 		// Ali imamo zmagovalca?
 		if (plosca[0].steviloZetonov == 15) {return Stanje.ZMAGA_CRNA;}
 		else if (plosca[25].steviloZetonov == 15) {return Stanje.ZMAGA_BELA;}
-		//Ce oba igralca ne moreta vrniti zbitih zetonov na plosco, je stanje neodloceno.
-		else if (plosca[26].steviloZetonov > 0 && plosca[27].steviloZetonov > 0 && neodlocenoPogoj(1, 6) && neodlocenoPogoj(19, 24))
-			{return Stanje.NEODLOCENO;}
 		else {return Stanje.V_TEKU;}		
 	}
 	
@@ -221,6 +208,8 @@ public class Igra {
 			return false;
 		}
 	}
+	
+	
 	
 	public boolean vsebuje(List<Poteza> list, Poteza poteza) {
 		for (Poteza vrednost: list) {

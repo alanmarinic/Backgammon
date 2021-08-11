@@ -1,8 +1,8 @@
 package splosno;
 
 public class Poteza {
-	int zacetnoPolje;
-	int koncnoPolje;
+	public int zacetnoPolje;
+	public int koncnoPolje;
 	
 	public Poteza (int zacetnoPolje, int koncnoPolje) {
 		this.zacetnoPolje = zacetnoPolje;

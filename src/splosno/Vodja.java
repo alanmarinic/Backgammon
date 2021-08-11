@@ -34,8 +34,6 @@ public class Vodja {
 		switch (igra.stanje()) {
 		case ZMAGA_CRNA: break;
 		case ZMAGA_BELA: 
-		case NEODLOCENO: 
-			return; // odhajamo iz metode igramo
 		case V_TEKU:
 			Igralec igralec = igra.naPotezi();
 			VrstaIgralca vrstaNaPotezi = vrstaIgralca.get(igralec);
