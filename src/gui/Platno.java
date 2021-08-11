@@ -19,7 +19,7 @@ import splosno.Poteza;
 public class Platno extends JPanel implements MouseListener{
 	
 	public Platno() {
-		setBackground(Color.PINK);
+		setBackground(new Color(153, 77, 0));
 		this.addMouseListener(this);
 	}
 	
@@ -56,17 +56,18 @@ public class Platno extends JPanel implements MouseListener{
 		double y;
 		double x = 0;
 		double spice = spice();
-		double premer = spice/3;
+		double premer = spice/2;
 		double rob = rob();
 		double skatlice = skatlice();
+		// * 1.25 pr spicah da so visji krogci
 		if (polje < 13) { 
-			y = getHeight() - rob - premer - (0.5 * LINE_WIDTH + PADDING);
+			y = getHeight() - rob - premer * 1.25 - (0.5 * LINE_WIDTH + PADDING);
 		}
 		else {
-			y = rob + 0.5 * LINE_WIDTH + PADDING;
+			y = rob + premer / 4 + 0.5 * LINE_WIDTH + PADDING;
 		}
 		if (polje == 25) {
-			x = getWidth() - rob - skatlice/2 - premer/2 - (0.5 * LINE_WIDTH + PADDING);
+			x = getWidth() - rob - skatlice/2 - (0.5 * LINE_WIDTH + PADDING);
 		}
 		else if (polje == 26) {
 			x = 2 *rob + 6 * spice - premer/2 - (0.5 * LINE_WIDTH + PADDING);
@@ -88,24 +89,31 @@ public class Platno extends JPanel implements MouseListener{
 		g2.setStroke(new BasicStroke((float) (spice * LINE_WIDTH)));
 		g2.fillOval((int)x, (int)y, (int)premer , (int)premer);
 		g2.setColor(Color.BLACK);
-		g2.drawString(Integer.toString(stZetonov), (int)(x + premer/2), (int)(y + premer/2));
+		if (stZetonov < 10) {
+			g2.drawString(Integer.toString(stZetonov), (int)(x + premer/2 - 4), (int)(y + premer/2 + 4));
+		}
+		else {
+			g2.drawString(Integer.toString(stZetonov), (int)(x + premer/2 - 8), (int)(y + premer/2 + 4));
+		}
 	}
 	
 	private void paintCrna(Graphics2D g2, int polje, int stZetonov) {
 		double y;
 		double x = 0;
 		double spice = spice();
-		double premer = spice/3;
+		double premer = spice/2;
 		double rob = rob();
 		double skatlice = skatlice();
 		if (polje < 12) { 
-			y = getHeight() - rob - premer - (0.5 * LINE_WIDTH + PADDING);
+			y = getHeight() - rob - premer * 1.25 - (0.5 * LINE_WIDTH + PADDING);
 		}
 		else {
-			y = rob + 0.5 * LINE_WIDTH + PADDING;
+			y = rob + premer / 4 + 0.5 * LINE_WIDTH + PADDING;
 		}
 		if (polje == 0) {
-			x = getWidth() - rob - skatlice/2 - premer/2 - (0.5 * LINE_WIDTH + PADDING);
+			x = getWidth() - rob - skatlice/2 - (0.5 * LINE_WIDTH + PADDING);
+			//y -= premer * 2.25;
+			
 		}
 		else if (polje == 27) {
 			x = 2 *rob + 6 * spice - premer/2 - (0.5 * LINE_WIDTH + PADDING);
@@ -127,7 +135,12 @@ public class Platno extends JPanel implements MouseListener{
 		g2.setStroke(new BasicStroke((float) (spice * LINE_WIDTH)));
 		g2.fillOval((int)x, (int)y, (int)premer , (int)premer);
 		g2.setColor(Color.WHITE);
-		g2.drawString(Integer.toString(stZetonov), (int)(x + premer/2), (int)(y + premer/2));
+		if (stZetonov < 10) {
+			g2.drawString(Integer.toString(stZetonov), (int)(x + premer/2 - 4), (int)(y + premer/2 + 4));
+		}
+		else {
+			g2.drawString(Integer.toString(stZetonov), (int)(x + premer/2 - 8), (int)(y + premer/2 + 4));
+		}
 	}
 	
 	public void paintKocke(Graphics2D g2, int prva, int druga) {
@@ -205,12 +218,12 @@ public class Platno extends JPanel implements MouseListener{
 		double rob = rob();
 		double spice = spice();
 		
-		g2.setColor(Color.WHITE);
+		g2.setColor(new Color(204, 136, 0));
 		int sirina =(int)((getWidth() - skatlice - 4 * rob) /2);
 		g2.fillRect((int)rob, (int)rob, (int)sirina, (int)(getHeight() - 2* rob));
 		g2.fillRect((int)(3*rob + sirina), (int)rob, (int)sirina, (int)(getHeight() - 2* rob));
 		
-		g2.setColor(Color.GREEN);
+		g2.setColor(new Color(204, 136, 0));
 		g2.fillRect((int)(getWidth() - skatlice), (int)rob, (int)(skatlice - rob), (int)(getHeight() / 2 - 2 * rob));
 		g2.fillRect((int)(getWidth() - skatlice), (int)(rob + getHeight() /2 ), (int)(skatlice - rob), (int)((getHeight() - 4 * rob) /2 ));
 		
@@ -218,10 +231,10 @@ public class Platno extends JPanel implements MouseListener{
 		for (int i = 0;i < 12;i++) {
 			double zamik;
 			if (i < 6) {zamik = 0;} else {zamik = 2 * rob;}
-			if (modra) {g2.setColor(Color.BLUE);} else {g2.setColor(Color.GREEN);}
+			if (modra) {g2.setColor(new Color(255, 191, 0));} else {g2.setColor(new Color(128, 64, 0));}
 			g2.fillPolygon(new int[] {(int)(rob + i * spice + zamik), (int)(rob + (i + 1) * spice + zamik), (int)(rob + i * spice + spice/2 + zamik)}, 
 					new int[] {(int)rob, (int)rob, (int)(getHeight()/2 - rob)}, 3);
-			if (modra) {g2.setColor(Color.BLUE);} else {g2.setColor(Color.GREEN);}
+			if (modra) {g2.setColor(new Color(128, 64, 0));} else {g2.setColor(new Color(255, 191, 0));}
 			modra = ! modra;
 			g2.fillPolygon(new int[] {(int)(rob + i * spice + zamik), (int)(rob + (i + 1) * spice + zamik), (int)(rob + i * spice + spice/2 + zamik)}, 
 					new int[] {(int)(getHeight() -rob), (int)(getHeight() -rob), (int)(getHeight()/2 + rob)}, 3);
@@ -233,6 +246,7 @@ public class Platno extends JPanel implements MouseListener{
 			plosca = Vodja.igra.getPlosca();
 
 			for (int i = 0; i < 28; i++) {
+				if (plosca[i].steviloZetonov == 0) {continue;}
 				switch(plosca[i].polje) {
 				case Bela: paintBela(g2, i, plosca[i].steviloZetonov); break;
 				case Crna: paintCrna(g2, i, plosca[i].steviloZetonov); break;

@@ -124,7 +124,6 @@ public class Okno extends JFrame implements ActionListener {
 		}
 		else {
 			switch(Vodja.igra.stanje()) {
-			case NEODLOCENO: status.setText("Neodločeno!"); break;
 			case V_TEKU: 
 				status.setText("Na potezi je " + Vodja.igra.naPotezi()); 
 				break;
