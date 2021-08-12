@@ -291,6 +291,7 @@ public class Platno extends JPanel implements MouseListener{
 			plosca = Vodja.igra.getPlosca();
 
 			for (int i = 0; i < 28; i++) {
+				if (plosca == null) System.out.println("null plosca");
 				if (plosca[i].steviloZetonov == 0) {continue;}
 				switch(plosca[i].polje) {
 				case Bela: paintBela(g2, i, plosca[i].steviloZetonov); break;
