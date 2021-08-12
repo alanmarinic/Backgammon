@@ -8,11 +8,11 @@ import java.util.Random;
 public class Igra {
 
 	// Igralno polje
-	public static PoljeInZetoni[] plosca;
+	public PoljeInZetoni[] plosca;
 	
 	// Igralec, ki je trenutno na potezi.
 	// Vrednost je poljubna, če je igre konec (se pravi, lahko je napačna).
-	public static Igralec naPotezi;
+	public Igralec naPotezi;
 
 	private static final Random RANDOM = new Random();
 
@@ -89,7 +89,7 @@ public class Igra {
 	}
 	
 	// Ustvari seznam možnih potez na določeni plošči iz danih metov
-	public static List<Poteza> moznePoteze(int[] meti) {
+	public  List<Poteza> moznePoteze(int[] meti) {
 		List<Poteza> moznePoteze = new ArrayList<Poteza>();
 		
 		// Bele figure
@@ -213,12 +213,7 @@ public class Igra {
 		// Pogledamo, če je poteza veljavna
 		/* Če je pocasen, odstrani primer za raćunalnik */
 		List<Poteza> moznePoteze = moznePoteze(Vodja.meti);
-		System.out.println("mozne poteze: ");
-		Vodja.izpisiSeznamPotez(moznePoteze);
-		System.out.println("nasa poteza: " + poteza.zacetnoPolje + "-" + poteza.koncnoPolje);
-		System.out.println(vsebuje(moznePoteze, poteza));
 		if (vsebuje(moznePoteze, poteza)) {
-			System.out.println("poteza veljavna");
 
 			// Izbrišemo začetni žeton
 			izbrisiZeton(poteza.zacetnoPolje);

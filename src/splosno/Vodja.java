@@ -60,7 +60,7 @@ public class Vodja {
 		}
 	}
 	
-	public static void igrajRacunalnikovoPotezo1() {
+	/*public static void igrajRacunalnikovoPotezo1() {
 		int[] meti = vrziKocki();
 		int dolzina = meti.length;
 		for (int j = 0; j < dolzina; j ++) {
@@ -74,7 +74,7 @@ public class Vodja {
 		}
 		Igra.naPotezi = Igra.naPotezi.nasprotnik();
 		igramo ();
-	}
+	}*/
 	
 	public static int[] vrziKocki() {
 		prviMet = Igra.metKocke();
@@ -92,27 +92,31 @@ public class Vodja {
 			// V ozadju izbere in odigra računalnikovo potezo
 			@Override
 			protected List<Poteza> doInBackground() {
-				
-				List<Poteza> poteze = MonteCarlo.izberiPotezo(igra, meti, 1);
-				izpisiSeznamPotez(poteze);
+				System.out.println("pred montecarlo");
+				List<Poteza> poteze = MonteCarlo.izberiPotezo(igra, vrziKocki(), 400);
+				System.out.println("po montecarlo");
+				//izpisiSeznamPotez(poteze);
 				/*for (Poteza p : poteze) {
 					igra.odigraj(p);
 					okno.osveziGUI();
 					try {TimeUnit.SECONDS.sleep(1);} catch (Exception e) {};
 				}*/
+				if (poteze == null) 		System.out.println("poteze v vodji1 so null");
 				return poteze;
 			}
 			@Override
 			protected void done () {
 				List<Poteza> poteze = null;
-				try {poteze = get();} catch (Exception e) {};
+				try {poteze = get();} catch (Exception e) {System.out.println("exception");};
 				if (igra == zacetnaIgra) {
+					if (poteze == null) 		System.out.println("poteze v vodji so null");
+
 					for (Poteza p : poteze) {
 						igra.odigraj(p);
 						//okno.osveziGUI();
 						//try {TimeUnit.SECONDS.sleep(1);} catch (Exception e) {};
 					}
-					Igra.naPotezi = Igra.naPotezi.nasprotnik();
+					igra.naPotezi = igra.naPotezi.nasprotnik();
 					igramo ();
 				}
 			}
@@ -125,7 +129,7 @@ public class Vodja {
 		okno.osveziGUI();
 		if (meti.length == 0) {
 			clovekNaVrsti = false;
-			Igra.naPotezi = Igra.naPotezi.nasprotnik();
+			igra.naPotezi = igra.naPotezi.nasprotnik();
 			igramo ();
 		}
 		
