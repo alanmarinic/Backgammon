@@ -54,9 +54,7 @@ public class MonteCarlo {
 		System.out.println("pmonte");
 		
 		//ce postavitev ni list
-		
-		////////contains
-		if (drevo.keySet().contains(postavitev)) {
+			if (drevo.keySet().contains(postavitev)) {
 			System.out.println("contains");
 			Postavitev izbranaPostavitev = izbor(postavitev);
 			monte(izbranaPostavitev);
@@ -64,8 +62,11 @@ public class MonteCarlo {
 		//postavitev je list
 		else {
 			System.out.println("else v monte");
+			System.out.println(postavitev.odigraneIgre);
+
 			//nismo se odigrali vsaj nobene igro do konca
 			if (postavitev.odigraneIgre == 0) {
+				System.out.println("monte else if");
 				rollout(postavitev.igra);
 				if (zmagovalec == Carlo) {
 					postavitev.stZmag += 1;
@@ -79,6 +80,7 @@ public class MonteCarlo {
 				}
 			}
 			else {
+				System.out.println("monte else else");
 				//z naklucnima metoma
 				int prviMet = Igra.metKocke();
 				int drugiMet = Igra.metKocke();
@@ -88,16 +90,19 @@ public class MonteCarlo {
 				}
 				else {meti = new int[] {prviMet, drugiMet};}
 				razvoj(postavitev, meti);
-				rollout(drevo.get(postavitev).get(0).igra);
-				if (zmagovalec == Carlo) {
-					postavitev.stZmag += 1;
-					postavitev.odigraneIgre += 1;
-					update(postavitev, 1, 0);
-				}
-				else {
-					postavitev.stZmagNasprotnik += 1;
-					postavitev.odigraneIgre += 1;
-					update(postavitev, 0, 1);
+				
+				if (drevo.get(postavitev).size() != 0) {
+					rollout(drevo.get(postavitev).get(0).igra);
+					if (zmagovalec == Carlo) {
+						postavitev.stZmag += 1;
+						postavitev.odigraneIgre += 1;
+						update(postavitev, 1, 0);
+					}
+					else {
+						postavitev.stZmagNasprotnik += 1;
+						postavitev.odigraneIgre += 1;
+						update(postavitev, 0, 1);
+					}
 				}
 			}
 		}
@@ -106,13 +111,15 @@ public class MonteCarlo {
 	
 	
 	
-	@SuppressWarnings("null")
+	//@SuppressWarnings("null")
 	public static void razvoj(Postavitev postavitev, int[] meti) {
 		System.out.println("razvoj zacetetk");
 		Set<Igra> zacetnaIgra = new HashSet<Igra>();
 		zacetnaIgra.add(postavitev.igra);
 		Set<Igra> noveIgre;
 		if (meti.length == 4) {
+			System.out.println("razvoj if");
+
 			noveIgre = odigrajVsePoteze(
 				odigrajVsePoteze(
 				odigrajVsePoteze(
@@ -120,17 +127,22 @@ public class MonteCarlo {
 					meti[0]),
 					meti[0]),
 					meti[0]);
+
 		}
+		
 		else {
+			System.out.println("razvoj else");
+
 			noveIgre = odigrajVsePoteze(
 				odigrajVsePoteze(zacetnaIgra, meti[0]),
 					meti[1]);
 			noveIgre.addAll(odigrajVsePoteze(
 								odigrajVsePoteze(zacetnaIgra, meti[1]),
 									meti[0]));
+
 		}
-		List<Postavitev> seznam = null;
-				
+		List<Postavitev> seznam = new ArrayList<>();
+
 		//iz mnozice iger v seznam postavitev
 		for (Igra posameznaIgra : noveIgre) {
 			posameznaIgra.naPotezi = posameznaIgra.naPotezi.nasprotnik();
@@ -142,12 +154,13 @@ public class MonteCarlo {
 	}
 	
 	public static HashMap<Igra, List<Poteza>> razvojSPotezami(Postavitev postavitev, int[] meti) {
+		System.out.println("razvoj s potezami");
+
 		HashMap<Igra, List<Poteza>> zacetnaIgra = new HashMap<>();
 		zacetnaIgra.put(postavitev.igra, new ArrayList<Poteza>());
 		HashMap<Igra, List<Poteza>> noveIgre;
 		Vodja.izpisiSeznam(meti);
 		if (meti.length == 4) {
-			System.out.println("if");
 
 			noveIgre = odigrajVsePoteze2(
 				odigrajVsePoteze2(
@@ -156,19 +169,15 @@ public class MonteCarlo {
 					meti[0]),
 					meti[0]),
 					meti[0]);
-			System.out.println("po if");
 
 		}
 		else {
-			System.out.println("else");
 			noveIgre = odigrajVsePoteze2(zacetnaIgra, meti[0]);
-			System.out.println("ovp2 je delu enkrat");
 			noveIgre = odigrajVsePoteze2(noveIgre, meti[1]);
 			
 			noveIgre.putAll(odigrajVsePoteze2(
 								odigrajVsePoteze2(zacetnaIgra, meti[1]),
 									meti[0]));
-			System.out.println("po else");
 
 		}
 		List<Postavitev> seznam = new ArrayList<>();
@@ -177,10 +186,8 @@ public class MonteCarlo {
 			posameznaIgra.naPotezi = posameznaIgra.naPotezi.nasprotnik();
 			seznam.add(new Postavitev(posameznaIgra, 0, 0, 0));
 		}
-		System.out.println("pred drevo");
 		
 		drevo.put(postavitev, seznam);
-		System.out.println("pred return");
 		return noveIgre;
 	}
 		
