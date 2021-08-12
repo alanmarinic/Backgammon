@@ -11,6 +11,7 @@ import java.awt.event.MouseListener;
 import javax.swing.JPanel;
 
 import splosno.Vodja;
+import splosno.Igra;
 import splosno.Polje;
 import splosno.PoljeInZetoni;
 import splosno.Poteza;
@@ -143,6 +144,50 @@ public class Platno extends JPanel implements MouseListener{
 		}
 	}
 	
+	private void round(Graphics2D g2, int polje) {
+		double y;
+		double x = 0;
+		double spice = spice();
+		double premer = spice/2;
+		double rob = rob();
+		double skatlice = skatlice();
+		if (polje < 13) { 
+			y = getHeight() - rob - premer * 1.25 - (0.5 * LINE_WIDTH + PADDING);
+		}
+		else {
+			y = rob + premer / 4 + 0.5 * LINE_WIDTH + PADDING;
+		}
+		if (polje == 25) {
+			x = getWidth() - rob - skatlice/2 - (0.5 * LINE_WIDTH + PADDING);
+		}
+		else if (polje == 26) {
+			x = 2 *rob + 6 * spice - premer/2 - (0.5 * LINE_WIDTH + PADDING);
+			y = 3 * getHeight() / 4 - premer/2;
+		}
+		else if (polje == 27) {
+			x = 2 *rob + 6 * spice - premer/2 - (0.5 * LINE_WIDTH + PADDING);
+			y = getHeight() / 4 - premer/2;
+		}
+		else if (polje > 6 && polje < 13) {
+			x = rob + (12 - polje) * spice + spice/2 - premer/2 - (0.5 * LINE_WIDTH + PADDING); 
+		}
+		else if (polje > 12 && polje < 19) {
+			x = rob + (polje - 13) * spice + spice/2 - premer/2 - (0.5 * LINE_WIDTH + PADDING); 
+		}
+		else if (polje < 7 && polje > 0) {
+			x = 3 * rob + (12 - polje) * spice + spice/2 - premer/2 - (0.5 * LINE_WIDTH + PADDING); 
+		}
+		else if (polje > 18 && polje < 25) {
+			x = 3 * rob + (polje - 13) * spice + spice/2 - premer/2 - (0.5 * LINE_WIDTH + PADDING);
+		}
+		if (polje == 0) {
+			x = getWidth() - rob - skatlice/2 - (0.5 * LINE_WIDTH + PADDING);	
+		}
+		g2.setColor(Color.YELLOW);
+		g2.setStroke(new BasicStroke((float) (spice * LINE_WIDTH)));
+		g2.drawOval((int)x, (int)y, (int)premer , (int)premer);
+	}
+	
 	public void paintKocke(Graphics2D g2, int prva, int druga) {
 		double spice = spice();
 		double rob = rob();
@@ -241,7 +286,7 @@ public class Platno extends JPanel implements MouseListener{
 		}
 			
 		//zetoni
-		PoljeInZetoni[] plosca;
+		PoljeInZetoni[] plosca = null;
 		if (Vodja.igra != null) {
 			plosca = Vodja.igra.getPlosca();
 
@@ -254,6 +299,7 @@ public class Platno extends JPanel implements MouseListener{
 				}
 			}
 		}
+		if (klik > -1) {round(g2, klik);}
 		
 		//kocke
 		if (Vodja.igra != null) {
@@ -264,9 +310,11 @@ public class Platno extends JPanel implements MouseListener{
 	
 	private int zacetnoPolje = -1;
 
+	private int klik = -10;
 	// Odziv ob kliku z miško - odigra človekovo potezo
 	@Override
 	public void mouseClicked(MouseEvent e) {
+		
 		if (Vodja.clovekNaVrsti) {
 			int x = e.getX();
 			int y = e.getY();
@@ -303,6 +351,7 @@ public class Platno extends JPanel implements MouseListener{
 					polje = 0;
 				}
 			}
+			klik = polje;
 			System.out.println(polje);
 			if (polje != -1) {
 				if (zacetnoPolje == -1) {
@@ -315,6 +364,7 @@ public class Platno extends JPanel implements MouseListener{
 				}
 			}
 		}
+		repaint();
 	}
 
 	@Override
