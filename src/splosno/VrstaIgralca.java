@@ -1,6 +1,8 @@
 package splosno;
 
 public enum VrstaIgralca {
+	
+	// R - računalnik, C - človek
 	R, C; 
 
 	@Override

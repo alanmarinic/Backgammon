@@ -1,6 +1,7 @@
 package splosno;
 
 public enum Igralec {
+	
 	Bela, Crna;
 
 	 public Igralec nasprotnik() {

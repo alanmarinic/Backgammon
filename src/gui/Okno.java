@@ -7,36 +7,33 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.EnumMap;
 
-import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.JTextField;
-
 import splosno.Igralec;
 import splosno.Vodja;
 import splosno.VrstaIgralca;
 
 @SuppressWarnings("serial")
 public class Okno extends JFrame implements ActionListener {
-
+	
 	private Platno platno;
 	
-	//Statusna vrstica v spodnjem delu okna
-
+	// Statusna vrstica v spodnjem delu okna
 	private JLabel status;
-
+	
+	// Opcije v menuju
 	private JMenuItem igraClovekRacunalnik;
 	private JMenuItem igraRacunalnikClovek;
 	private JMenuItem igraClovekClovek;
 	private JMenuItem igraRacunalnikRacunalnik;
 
+	
 	public Okno() {
 		
-		
+		// Nastavimo naslov
 		this.setTitle("Backgammon");
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setLayout(new GridBagLayout());
@@ -55,15 +52,16 @@ public class Okno extends JFrame implements ActionListener {
 		
 		platno = new Platno();
 		
+		// Nastavimo postavitev objektov v oknu
 		GridBagConstraints polje_layout = new GridBagConstraints();
 		polje_layout.gridx = 0;
 		polje_layout.gridy = 0;
 		polje_layout.fill = GridBagConstraints.BOTH;
-		//polje_layout.anchor = GridBagConstraints.CENTER;
 		polje_layout.weightx = 1.0;
 		polje_layout.weighty = 1.0;
 		getContentPane().add(platno, polje_layout);
-		// statusna vrstica za sporočila
+		
+		// Statusna vrstica za sporočila
 		status = new JLabel();
 		status.setFont(new Font(status.getFont().getName(),
 							    status.getFont().getStyle(),
@@ -78,6 +76,7 @@ public class Okno extends JFrame implements ActionListener {
 
 	}
 	
+	// Pomožna funkcija za dodajanje menujev
 	public JMenuItem dodajMenuItem(JMenu menu, String naslov) {
 		JMenuItem menuitem = new JMenuItem(naslov);
 		menu.add(menuitem);
@@ -116,7 +115,7 @@ public class Okno extends JFrame implements ActionListener {
 			}
 	}
 		
-	// Osvezi GUI
+	// Osveži GUI
 	public void osveziGUI() {
 		// Izpis v statusni vrstici
 		if (Vodja.igra == null) {
@@ -138,4 +137,5 @@ public class Okno extends JFrame implements ActionListener {
 		}
 		platno.repaint();
 	}
+	
 }

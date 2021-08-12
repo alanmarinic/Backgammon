@@ -5,25 +5,25 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-
 public class Igra {
-
 
 	// Igralno polje
 	public static PoljeInZetoni[] plosca;
 	
 	// Igralec, ki je trenutno na potezi.
-		// Vrednost je poljubna, če je igre konec (se pravi, lahko je napačna).
+	// Vrednost je poljubna, če je igre konec (se pravi, lahko je napačna).
 	public static Igralec naPotezi;
-	
+
 	private static final Random RANDOM = new Random();
 
-	
+	// Metoda izbere začetnega igralca
 	public Igralec kdoZacne() {
+		// Vržemo obe kocki
 		int bela = metKocke();
 		int crna = metKocke();
 		Vodja.prviMet = bela;
 		Vodja.drugiMet = crna;
+		
 		if (bela > crna) {
 			System.out.println("Zacne beli, ki je vrgel " + bela);
 			return Igralec.Bela;
@@ -32,20 +32,24 @@ public class Igra {
 			System.out.println("Zacne crni, ki je vrgel " + crna);
 			return Igralec.Crna;
 		}
-		else {return kdoZacne();}	
+		else {
+			return kdoZacne();
+		}	
 	}
 	
+	// Metoda vrže kocko
 	public static int metKocke() {
 		return RANDOM.nextInt(6) + 1;
 	}
 	
-	
+	// Metoda postavi igralno polje in začne igro
 	public Igra() {
 		plosca = new PoljeInZetoni[28];
-		//polji 0 in 25 predstavljata skatlico. 0 od crnih in 25 od belih
-		//polji 26 in 27 predstavljata sredinsko polje z zbitimi zetoni. 26 od belih in 27 od crnih 
+		// Polji 0 in 25 predstavljata končni mesti, 0 od črnih in 25 od belih
+		// Polji 26 in 27 predstavljata sredinsko polje z zbitimi zetoni, 26 od belih in 27 od črnih 
 		List<Integer> bele = Arrays.asList(1, 12, 17, 19, 25, 26);
 		List<Integer> crne = Arrays.asList(0, 6, 8, 13, 24, 27);
+		
 		for (int i = 0; i < 28; i++) {
 			plosca[i] = new PoljeInZetoni(Polje.PRAZNO, 0);
 			if (bele.contains(i)) {plosca[i].polje = Polje.Bela;}
@@ -67,6 +71,7 @@ public class Igra {
 		naPotezi = kdoZacne();
 	}
 	
+	//
 	public Igra(Igra igra) {
 		this.plosca = new PoljeInZetoni[28];
 		for (int i = 0; i < 28; i++) {
@@ -74,7 +79,6 @@ public class Igra {
 		}
 		this.naPotezi = igra.naPotezi;
 	}
-
 	
 	public PoljeInZetoni[] getPlosca () {
 		return plosca;
@@ -84,40 +88,52 @@ public class Igra {
 		return naPotezi;
 	}
 	
+	// Ustvari seznam možnih potez na določeni plošči iz danih metov
 	public static List<Poteza> moznePoteze(int[] meti) {
 		List<Poteza> moznePoteze = new ArrayList<Poteza>();
-		//Najprej preverimo, ce je kaksen zeton na sredini
+		
+		// Bele figure
 		if (naPotezi == Igralec.Bela) {
+			// Najprej preverimo, če je kakšen žeton na sredini (zbit)
 			if (plosca[26].steviloZetonov > 0) {
 				for (int i: meti) {
-					if (plosca[i].polje == Polje.PRAZNO || plosca[i].polje == Polje.Bela || (plosca[i].polje == Polje.Crna && plosca[i].steviloZetonov == 1)) 
-						{moznePoteze.add(new Poteza(26, i));}
+					if (plosca[i].polje == Polje.PRAZNO || plosca[i].polje == Polje.Bela || (plosca[i].polje == Polje.Crna && plosca[i].steviloZetonov == 1)) {
+						moznePoteze.add(new Poteza(26, i));
+						}
 				}
 			}
 			else {
 				boolean cetrtiKvadrant = true;
 				for (int polje = 1; polje < 25; polje++) {
 					if (plosca[polje].polje == Polje.Bela) {
-						if (polje < 19) {cetrtiKvadrant = false;}
+						if (polje < 19) {
+							cetrtiKvadrant = false;
+							}
 						for (int met : meti) {
 							if (polje + met < 25) {
 								if (plosca[polje + met].polje == Polje.Crna && plosca[polje + met].steviloZetonov > 1) {
 									continue;
 								}
-								else moznePoteze.add(new Poteza(polje, polje + met));
+								else {
+									moznePoteze.add(new Poteza(polje, polje + met));
+								}
 							}
-							else if (cetrtiKvadrant) {moznePoteze.add(new Poteza(polje, 25));}
+							else if (cetrtiKvadrant) {
+								moznePoteze.add(new Poteza(polje, 25));
+								}
 							
 						}
 					}
 				}
 			}
 		}
+		// Črne figure
 		else if (naPotezi == Igralec.Crna) {
 			if (plosca[27].steviloZetonov > 0) {
 				for (int i: meti) {
-					if (plosca[25 - i].polje == Polje.PRAZNO || plosca[25 - i].polje == Polje.Crna || (plosca[25 - i].polje == Polje.Bela && plosca[25 - i].steviloZetonov == 1)) 
-						{moznePoteze.add(new Poteza(27, 25 - i));}
+					if (plosca[25 - i].polje == Polje.PRAZNO || plosca[25 - i].polje == Polje.Crna || (plosca[25 - i].polje == Polje.Bela && plosca[25 - i].steviloZetonov == 1)) {
+						moznePoteze.add(new Poteza(27, 25 - i));
+						}
 				}
 			}
 			else {
@@ -130,9 +146,13 @@ public class Igra {
 								if (plosca[polje - met].polje == Polje.Bela && plosca[polje - met].steviloZetonov > 1) {
 									continue;
 								}
-								else moznePoteze.add(new Poteza(polje, polje - met));
+								else {
+									moznePoteze.add(new Poteza(polje, polje - met));
+								}
 							}
-							else if (prviKvadrant) {moznePoteze.add(new Poteza(polje, 0));}
+							else if (prviKvadrant) {
+								moznePoteze.add(new Poteza(polje, 0));
+								}
 						}
 					}
 				}
@@ -141,14 +161,20 @@ public class Igra {
 		return moznePoteze;
 	}
 	
-	
+	// Ali imamo zmagovalca?
 	public Stanje stanje() {
-		// Ali imamo zmagovalca?
-		if (plosca[0].steviloZetonov == 15) {return Stanje.ZMAGA_CRNA;}
-		else if (plosca[25].steviloZetonov == 15) {return Stanje.ZMAGA_BELA;}
-		else {return Stanje.V_TEKU;}		
+		if (plosca[0].steviloZetonov == 15) {
+			return Stanje.ZMAGA_CRNA;
+			}
+		else if (plosca[25].steviloZetonov == 15) {
+			return Stanje.ZMAGA_BELA;
+			}
+		else {
+			return Stanje.V_TEKU;
+			}		
 	}
 	
+	// Izbriše žeton, ko odigramo potezo 
 	public void izbrisiZeton(int polje) {
 		if (plosca[polje].steviloZetonov > 1) {
 			plosca[polje].steviloZetonov -= 1;
@@ -161,6 +187,7 @@ public class Igra {
 		}
 	}
 	
+	// Pomožna funkcija, ki doda žeton na mesto kamor smo odigrali potezo
 	public void dodajZeton(int polje) {
 		if (plosca[polje].polje == Polje.PRAZNO) {
 			plosca[polje].polje = naPotezi.getPolje();
@@ -181,9 +208,10 @@ public class Igra {
 		}
 	}
 	
+	// Odigra potezo
 	public boolean odigraj(Poteza poteza) {
-		//pogledamo, ce je poteza veljavna
-		//ce je pocasen, odstrani primer za racunalnik
+		// Pogledamo, če je poteza veljavna
+		/* Če je pocasen, odstrani primer za raćunalnik */
 		List<Poteza> moznePoteze = moznePoteze(Vodja.meti);
 		System.out.println("mozne poteze: ");
 		Vodja.izpisiSeznamPotez(moznePoteze);
@@ -192,16 +220,18 @@ public class Igra {
 		if (vsebuje(moznePoteze, poteza)) {
 			System.out.println("poteza veljavna");
 
-			//izbrisemo zacetni zeton
+			// Izbrišemo začetni žeton
 			izbrisiZeton(poteza.zacetnoPolje);
-			//dodamo zeton na koncnem polju
+			// Dodamo žeton na končnem polju
 			dodajZeton(poteza.koncnoPolje);
-			//Vodja.izpisiSeznam(Vodja.meti);
-			//izbrisemo met iz seznam metov
-			if (poteza.zacetnoPolje == 26) Vodja.meti = odstraniMet(Vodja.meti, poteza.koncnoPolje);
-			else if (poteza.zacetnoPolje == 27) Vodja.meti = odstraniMet(Vodja.meti, 25 - poteza.koncnoPolje);
-			else Vodja.meti = odstraniMet(Vodja.meti, Math.abs(poteza.zacetnoPolje - poteza.koncnoPolje));
-			//Vodja.izpisiSeznam(Vodja.meti);
+			
+			// Izbrišemo met iz seznam metov
+			if (poteza.zacetnoPolje == 26)
+				Vodja.meti = odstraniMet(Vodja.meti, poteza.koncnoPolje);
+			else if (poteza.zacetnoPolje == 27)
+				Vodja.meti = odstraniMet(Vodja.meti, 25 - poteza.koncnoPolje);
+			else 
+				Vodja.meti = odstraniMet(Vodja.meti, Math.abs(poteza.zacetnoPolje - poteza.koncnoPolje));
 			return true;
 		}
 		else {
@@ -209,8 +239,7 @@ public class Igra {
 		}
 	}
 	
-	
-	
+	// Preveri ali seznam potez vsebuje določeno potezo
 	public boolean vsebuje(List<Poteza> list, Poteza poteza) {
 		for (Poteza vrednost: list) {
 			if (vrednost.zacetnoPolje == poteza.zacetnoPolje && vrednost.koncnoPolje == poteza.koncnoPolje) {
@@ -220,6 +249,7 @@ public class Igra {
 		return false;
 	}
 	
+	// Odstrani met iz tabele metov
 	public int[] odstraniMet(int[] meti, int met) {
 		Vodja.izpisiSeznam(meti);
 		List<Integer> novi = new ArrayList<>();
@@ -234,10 +264,6 @@ public class Igra {
 		for(int i = 0; i < novi.size(); i++) array[i] = novi.get(i);
 		Vodja.izpisiSeznam(array);
 		return array;
-
 	}
-		
-		
-	
-	
+
 }

@@ -61,12 +61,7 @@ public class Vodja {
 	}
 	
 	public static void igrajRacunalnikovoPotezo1() {
-		prviMet = Igra.metKocke();
-		drugiMet = Igra.metKocke();
-		if (prviMet == drugiMet) {
-			meti = new int[] {prviMet, prviMet, prviMet, prviMet};
-		}
-		else {meti = new int[] {prviMet, drugiMet};}
+		int[] meti = vrziKocki();
 		int dolzina = meti.length;
 		for (int j = 0; j < dolzina; j ++) {
 			List<Poteza> moznePoteze = Igra.moznePoteze(meti);
@@ -81,18 +76,23 @@ public class Vodja {
 		igramo ();
 	}
 	
+	public static int[] vrziKocki() {
+		prviMet = Igra.metKocke();
+		drugiMet = Igra.metKocke();
+		if (prviMet == drugiMet) {
+			meti = new int[] {prviMet, prviMet, prviMet, prviMet};
+		}
+		else {meti = new int[] {prviMet, drugiMet};}
+		return meti;
+	}
+	
 	public static void igrajRacunalnikovoPotezo() {
 		Igra zacetnaIgra = igra;
 		SwingWorker<List<Poteza>, Void> worker = new SwingWorker<List<Poteza>, Void> () {
 			// V ozadju izbere in odigra računalnikovo potezo
 			@Override
 			protected List<Poteza> doInBackground() {
-				prviMet = Igra.metKocke();
-				drugiMet = Igra.metKocke();
-				if (prviMet == drugiMet) {
-					meti = new int[] {prviMet, prviMet, prviMet, prviMet};
-				}
-				else {meti = new int[] {prviMet, drugiMet};}
+				
 				List<Poteza> poteze = MonteCarlo.izberiPotezo(igra, meti, 1);
 				izpisiSeznamPotez(poteze);
 				/*for (Poteza p : poteze) {

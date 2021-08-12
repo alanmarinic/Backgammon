@@ -11,8 +11,6 @@ import java.awt.event.MouseListener;
 import javax.swing.JPanel;
 
 import splosno.Vodja;
-import splosno.Igra;
-import splosno.Polje;
 import splosno.PoljeInZetoni;
 import splosno.Poteza;
 
@@ -20,10 +18,15 @@ import splosno.Poteza;
 public class Platno extends JPanel implements MouseListener{
 	
 	public Platno() {
+		
+		// Nastavimo barvo ozadja
 		setBackground(new Color(153, 77, 0));
+		
+		// Dodamo MouseListener, da lahko sledimo klikom
 		this.addMouseListener(this);
 	}
 	
+	// Dimenzije platna
 	@Override
 	public Dimension getPreferredSize() {
 		return new Dimension(700, 400);
@@ -46,13 +49,10 @@ public class Platno extends JPanel implements MouseListener{
 		return (getWidth() - skatlice() - 4 * rob()) / 12;
 	}
 	
-	
-	
-	
-	// Relativni prostor okoli zetonov
+	// Relativni prostor okoli žetonov
 	private final static double PADDING = 0.18;
 	
-	
+	// Nariše bele žetone
 	private void paintBela(Graphics2D g2, int polje, int stZetonov) {
 		double y;
 		double x = 0;
@@ -60,7 +60,7 @@ public class Platno extends JPanel implements MouseListener{
 		double premer = spice/2;
 		double rob = rob();
 		double skatlice = skatlice();
-		// * 1.25 pr spicah da so visji krogci
+		
 		if (polje < 13) { 
 			y = getHeight() - rob - premer * 1.25 - (0.5 * LINE_WIDTH + PADDING);
 		}
@@ -86,9 +86,11 @@ public class Platno extends JPanel implements MouseListener{
 		else if (polje > 18 && polje < 25) {
 			x = 3 * rob + (polje - 13) * spice + spice/2 - premer/2 - (0.5 * LINE_WIDTH + PADDING);
 		}
+		// Nariše žeton
 		g2.setColor(Color.WHITE);
 		g2.setStroke(new BasicStroke((float) (spice * LINE_WIDTH)));
 		g2.fillOval((int)x, (int)y, (int)premer , (int)premer);
+		// Izpiše število žetonov na določenem polju
 		g2.setColor(Color.BLACK);
 		if (stZetonov < 10) {
 			g2.drawString(Integer.toString(stZetonov), (int)(x + premer/2 - 4), (int)(y + premer/2 + 4));
@@ -98,6 +100,7 @@ public class Platno extends JPanel implements MouseListener{
 		}
 	}
 	
+	// Nariše črne žetone
 	private void paintCrna(Graphics2D g2, int polje, int stZetonov) {
 		double y;
 		double x = 0;
@@ -105,6 +108,7 @@ public class Platno extends JPanel implements MouseListener{
 		double premer = spice/2;
 		double rob = rob();
 		double skatlice = skatlice();
+		
 		if (polje < 12) { 
 			y = getHeight() - rob - premer * 1.25 - (0.5 * LINE_WIDTH + PADDING);
 		}
@@ -132,9 +136,12 @@ public class Platno extends JPanel implements MouseListener{
 		else if (polje > 18 && polje < 25) {
 			x = 3 * rob + (polje - 13) * spice + spice/2 - premer/2 - (0.5 * LINE_WIDTH + PADDING);
 		}
+		
+		// Nariše žetone
 		g2.setColor(Color.BLACK);
 		g2.setStroke(new BasicStroke((float) (spice * LINE_WIDTH)));
 		g2.fillOval((int)x, (int)y, (int)premer , (int)premer);
+		// Napiše število žetonov na določenem polju
 		g2.setColor(Color.WHITE);
 		if (stZetonov < 10) {
 			g2.drawString(Integer.toString(stZetonov), (int)(x + premer/2 - 4), (int)(y + premer/2 + 4));
@@ -144,6 +151,7 @@ public class Platno extends JPanel implements MouseListener{
 		}
 	}
 	
+	// Obkroži žeton, na katerega kliknemo
 	private void round(Graphics2D g2, int polje) {
 		double y;
 		double x = 0;
@@ -151,6 +159,7 @@ public class Platno extends JPanel implements MouseListener{
 		double premer = spice/2;
 		double rob = rob();
 		double skatlice = skatlice();
+		
 		if (polje < 13) { 
 			y = getHeight() - rob - premer * 1.25 - (0.5 * LINE_WIDTH + PADDING);
 		}
@@ -188,6 +197,7 @@ public class Platno extends JPanel implements MouseListener{
 		g2.drawOval((int)x, (int)y, (int)premer , (int)premer);
 	}
 	
+	// Nariše kocke
 	public void paintKocke(Graphics2D g2, int prva, int druga) {
 		double spice = spice();
 		double rob = rob();
@@ -195,6 +205,7 @@ public class Platno extends JPanel implements MouseListener{
 		double y = getHeight() / 2 - premer / 2;
 		double x1 = 3 * rob + 7 * spice;
 		double x2 = x1 + 2 * premer;
+		
 		g2.setColor(Color.RED);
 		g2.fillRoundRect((int)x1, (int)y, (int)premer, (int)premer, (int)premer/4, (int)premer/4);
 		g2.fillRoundRect((int)x2, (int)y, (int)premer, (int)premer, (int)premer/4, (int)premer/4);
@@ -209,12 +220,15 @@ public class Platno extends JPanel implements MouseListener{
 		}
 	}
 	
+	// Nariše pike na kocke
 	public void paintPike(Graphics2D g2, int stPik, double x, double y, double premer) {
 		double polmerPike = premer / 10;
 		g2.setColor(Color.WHITE);
+		
 		switch (stPik) {
 		case 1: g2.fillOval((int)(x + premer/2 - polmerPike), (int)(y + premer/2 - polmerPike), (int)polmerPike * 2, (int)polmerPike * 2);
 			break;
+			
 		case 2: 
 			g2.fillOval((int)(x + polmerPike), (int)(y + polmerPike), (int)polmerPike * 2, (int)polmerPike * 2);
 			g2.fillOval((int)(x + premer - 3 * polmerPike), (int)(y + premer - 3 * polmerPike), (int)polmerPike * 2, (int)polmerPike * 2);
@@ -249,11 +263,10 @@ public class Platno extends JPanel implements MouseListener{
 			g2.fillOval((int)(x + polmerPike), (int)(y + 4 * polmerPike), (int)polmerPike * 2, (int)polmerPike * 2);
 			g2.fillOval((int)(x + premer - 3 * polmerPike), (int)(y + 4 * polmerPike), (int)polmerPike * 2, (int)polmerPike * 2);	
 			break;
-
 		}
 	}
 	
-	
+	// S pomočjo ostalih funkcij izriše vse objekte na platno
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
@@ -263,6 +276,7 @@ public class Platno extends JPanel implements MouseListener{
 		double rob = rob();
 		double spice = spice();
 		
+		// Nariše ozadje (pravokotniki)
 		g2.setColor(new Color(204, 136, 0));
 		int sirina =(int)((getWidth() - skatlice - 4 * rob) /2);
 		g2.fillRect((int)rob, (int)rob, (int)sirina, (int)(getHeight() - 2* rob));
@@ -272,6 +286,7 @@ public class Platno extends JPanel implements MouseListener{
 		g2.fillRect((int)(getWidth() - skatlice), (int)rob, (int)(skatlice - rob), (int)(getHeight() / 2 - 2 * rob));
 		g2.fillRect((int)(getWidth() - skatlice), (int)(rob + getHeight() /2 ), (int)(skatlice - rob), (int)((getHeight() - 4 * rob) /2 ));
 		
+		// Nariše špice kot polja
 		boolean modra = false;
 		for (int i = 0;i < 12;i++) {
 			double zamik;
@@ -285,33 +300,43 @@ public class Platno extends JPanel implements MouseListener{
 					new int[] {(int)(getHeight() -rob), (int)(getHeight() -rob), (int)(getHeight()/2 + rob)}, 3);
 		}
 			
-		//zetoni
+		// Nariše žetone
 		PoljeInZetoni[] plosca = null;
 		if (Vodja.igra != null) {
 			plosca = Vodja.igra.getPlosca();
 
 			for (int i = 0; i < 28; i++) {
-				if (plosca == null) System.out.println("null plosca");
+				// Če je število žetonov na polju enako 0, jih ne nariše
 				if (plosca[i].steviloZetonov == 0) {continue;}
 				switch(plosca[i].polje) {
-				case Bela: paintBela(g2, i, plosca[i].steviloZetonov); break;
-				case Crna: paintCrna(g2, i, plosca[i].steviloZetonov); break;
-				default: break;
+				case Bela: 
+					paintBela(g2, i, plosca[i].steviloZetonov); 
+					break;
+				
+				case Crna: 
+					paintCrna(g2, i, plosca[i].steviloZetonov);
+					break;
+					
+				default:
+					break;
 				}
 			}
 		}
+		
+		// Obkroži žeton na katerega kliknemo
 		if (klik > -1) {round(g2, klik);}
 		
-		//kocke
+		// Nariše kocke
 		if (Vodja.igra != null) {
 			paintKocke(g2, Vodja.prviMet, Vodja.drugiMet);
 		}
-		//na zacetku ce oba vrzeta isto, so 4 kocke
 	}
 	
+	// Pomožni konstanti za delovanje metode mouseClicked,
+	// da lahko posledice metode uporabimo tudi v drugih funkcijah
 	private int zacetnoPolje = -1;
-
 	private int klik = -10;
+	
 	// Odziv ob kliku z miško - odigra človekovo potezo
 	@Override
 	public void mouseClicked(MouseEvent e) {
@@ -352,6 +377,7 @@ public class Platno extends JPanel implements MouseListener{
 					polje = 0;
 				}
 			}
+			
 			klik = polje;
 			System.out.println(polje);
 			if (polje != -1) {
@@ -359,7 +385,6 @@ public class Platno extends JPanel implements MouseListener{
 					zacetnoPolje = polje;
 				}
 				else {
-					
 					Vodja.igrajClovekovoPotezo(new Poteza(zacetnoPolje, polje));
 					zacetnoPolje = -1;
 				}
@@ -368,37 +393,16 @@ public class Platno extends JPanel implements MouseListener{
 		repaint();
 	}
 
+	// Metode, ki jih ne uporabimo
 	@Override
-	public void mousePressed(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void mousePressed(MouseEvent e) {}
+	
+	@Override
+	public void mouseReleased(MouseEvent e) {}
 
 	@Override
-	public void mouseReleased(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void mouseEntered(MouseEvent e) {}
 
 	@Override
-	public void mouseEntered(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mouseExited(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void mouseExited(MouseEvent e) {}
 }
-
-
-
-
-
-
-
-
-
-

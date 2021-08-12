@@ -1,6 +1,7 @@
 package splosno;
 
 public class PoljeInZetoni {
+	
 	public Polje polje;
 	public int steviloZetonov;
 	

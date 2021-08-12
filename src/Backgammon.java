@@ -1,6 +1,7 @@
 import gui.Okno;
 import splosno.Vodja;
 
+// S to kodo zaženemo program 
 public class Backgammon {
 
 	public static void main(String[] args) {
@@ -9,5 +10,5 @@ public class Backgammon {
 		glavno_okno.setVisible(true);
 		Vodja.okno = glavno_okno;
 	}
-
+	
 }

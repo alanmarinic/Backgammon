@@ -2,7 +2,9 @@ package inteligenca;
 
 import splosno.Igra;
 
+// Tip definiramo za lažje delovanje AI
 public class Postavitev {
+	
 	Igra igra;
 	double stZmag;
 	double stZmagNasprotnik;
