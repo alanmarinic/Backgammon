@@ -10,7 +10,6 @@ import java.util.Set;
 import splosno.Igra;
 import splosno.Igralec;
 import splosno.Poteza;
-import splosno.Vodja;
 
 //AI uporablja Monte Carlo Tree Search
 public class MonteCarlo {
@@ -234,9 +233,6 @@ public class MonteCarlo {
 			}
 		}
 	}
-	
-	
-	
 	
 	public static Set<Igra> odigrajVsePoteze(Set<Igra> igre, int met) {
 		Set<Igra> noveIgre = new HashSet<Igra>();

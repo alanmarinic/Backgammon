@@ -1,10 +1,7 @@
 package splosno;
 
-import java.awt.Graphics2D;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 import javax.swing.SwingWorker;
@@ -21,9 +18,7 @@ public class Vodja {
 	public static Igra igra = null;
 	
 	public static boolean clovekNaVrsti = false;
-	
-	private static final Random RANDOM = new Random();
-	
+		
 	public static int prviMet;
 	public static int drugiMet;
 	public static int[] meti;
@@ -53,8 +48,7 @@ public class Vodja {
 		}
 	}
 	
-	
-	
+	//Vrne seznam metov kock, podvojen, ce sta meta enaka
 	public static int[] vrziKocki() {
 		prviMet = Igra.metKocke();
 		drugiMet = Igra.metKocke();
@@ -65,15 +59,17 @@ public class Vodja {
 		return meti;
 	}
 	
+	//Racunalnik odigra svojo potezo z uporabo Monte Carlo Tree Search metodo
 	public static void igrajRacunalnikovoPotezo() {
 		Igra tempIgra = new Igra(igra);
 		SwingWorker<List<Poteza>, Void> worker = new SwingWorker<List<Poteza>, Void> () {
-			// V ozadju izbere in odigra računalnikovo potezo
+			// V ozadju izbere in vrne računalnikovo potezo
 			@Override
 			protected List<Poteza> doInBackground() {
 				List<Poteza> poteze = MonteCarlo.izberiPotezo(tempIgra, vrziKocki(), 100);				
 				return poteze;
 			}
+			//Odigra potezo
 			@Override
 			protected void done () {
 				List<Poteza> poteze = null;
@@ -82,7 +78,7 @@ public class Vodja {
 					igra.naPotezi = igra.naPotezi().nasprotnik();
 					igramo();
 				}
-				if (poteze.isEmpty()) {
+				else if (poteze.isEmpty()) {
 					igra.naPotezi = igra.naPotezi().nasprotnik();
 					igramo();
 				}
