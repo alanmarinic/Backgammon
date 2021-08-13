@@ -25,8 +25,9 @@ public class MonteCarlo {
 	//@SuppressWarnings("null")
 	public static List<Poteza> izberiPotezo(Igra igra, int[] meti, int globina) {
 		System.out.println("AI izbira potezo");
-		Postavitev glavnaPostavitev = new Postavitev(igra, 0, 0, 0);
-		Carlo = igra.naPotezi();
+		Igra tempIgra = new Igra(igra);
+		Postavitev glavnaPostavitev = new Postavitev(tempIgra, 0, 0, 0);
+		Carlo = tempIgra.naPotezi();
 		HashMap<Igra, List<Poteza>> sPotezami = razvojSPotezami(glavnaPostavitev, meti);
 		System.out.println("prazvili s potezami");
 		System.out.println("pred while" + sPotezami);
@@ -37,33 +38,36 @@ public class MonteCarlo {
 		double max = Double.MIN_VALUE;
 		Postavitev najboljsa = null;
 		for (Postavitev postavitev: drevo.get(glavnaPostavitev)) {
-			double vrednost = postavitev.stZmag / postavitev.odigraneIgre;
-			if (vrednost > max) {
-				max = vrednost;
-				najboljsa = postavitev;
+			if (postavitev.odigraneIgre != 0) {
+				double vrednost = postavitev.stZmag / postavitev.odigraneIgre;
+				if (vrednost > max) {
+					max = vrednost;
+					najboljsa = postavitev;
+				}
 			}
 		}
+		if (najboljsa == null) 		System.out.println("najboljsa null");
+
 		List<Poteza> poteze = sPotezami.get(najboljsa.igra);
-		//Vodja.izpisiSeznamPotez(poteze);
+		System.out.println("izberi potezo poteze:");
+
+		Vodja.izpisiSeznamPotez(poteze);
 		return poteze;
 	}
 	
 	
 	public static void monte(Postavitev postavitev) {
-		//;
-		System.out.println("pmonte");
-		
+		System.out.println("monte");
 		//ce postavitev ni list
-			if (drevo.keySet().contains(postavitev)) {
+		if (drevo.keySet().contains(postavitev)) {
 			System.out.println("contains");
 			Postavitev izbranaPostavitev = izbor(postavitev);
+			if (izbranaPostavitev == null) 		System.out.println("null postavitev");
 			monte(izbranaPostavitev);
 		}
 		//postavitev je list
 		else {
 			System.out.println("else v monte");
-			System.out.println(postavitev.odigraneIgre);
-
 			//nismo se odigrali vsaj nobene igro do konca
 			if (postavitev.odigraneIgre == 0) {
 				System.out.println("monte else if");
@@ -79,6 +83,7 @@ public class MonteCarlo {
 					update(postavitev, 0, 1);
 				}
 			}
+			//je ze odigrana vsaj ena igra
 			else {
 				System.out.println("monte else else");
 				//z naklucnima metoma
@@ -91,7 +96,7 @@ public class MonteCarlo {
 				else {meti = new int[] {prviMet, drugiMet};}
 				razvoj(postavitev, meti);
 				
-				if (drevo.get(postavitev).size() != 0) {
+				/*if (drevo.get(postavitev).size() != 0) {
 					rollout(drevo.get(postavitev).get(0).igra);
 					if (zmagovalec == Carlo) {
 						postavitev.stZmag += 1;
@@ -103,13 +108,11 @@ public class MonteCarlo {
 						postavitev.odigraneIgre += 1;
 						update(postavitev, 0, 1);
 					}
-				}
+				}*/
 			}
 		}
 		System.out.println("konec monte");
 	}
-	
-	
 	
 	//@SuppressWarnings("null")
 	public static void razvoj(Postavitev postavitev, int[] meti) {
@@ -119,7 +122,6 @@ public class MonteCarlo {
 		Set<Igra> noveIgre;
 		if (meti.length == 4) {
 			System.out.println("razvoj if");
-
 			noveIgre = odigrajVsePoteze(
 				odigrajVsePoteze(
 				odigrajVsePoteze(
@@ -127,7 +129,6 @@ public class MonteCarlo {
 					meti[0]),
 					meti[0]),
 					meti[0]);
-
 		}
 		
 		else {
@@ -148,8 +149,18 @@ public class MonteCarlo {
 			posameznaIgra.naPotezi = posameznaIgra.naPotezi.nasprotnik();
 			seznam.add(new Postavitev(posameznaIgra, 0, 0, 0));
 		}
-		drevo.put(postavitev, seznam);
-		System.out.println("razvoj konec");
+		//ce je seznam prazen, te postavitve ne dodamo kot kljuc
+		if (seznam.isEmpty()) {
+			System.out.println("prazen");
+			Igra tempIgra = new Igra(postavitev.igra); 
+			tempIgra.naPotezi = tempIgra.naPotezi.nasprotnik();
+			seznam.add(new Postavitev(tempIgra, postavitev.stZmag, postavitev.stZmagNasprotnik, postavitev.odigraneIgre));
+			drevo.put(postavitev, seznam);
+		}
+		else {
+			drevo.put(postavitev, seznam);
+			System.out.println("razvoj konec");
+		}
 		
 	}
 	
@@ -159,9 +170,7 @@ public class MonteCarlo {
 		HashMap<Igra, List<Poteza>> zacetnaIgra = new HashMap<>();
 		zacetnaIgra.put(postavitev.igra, new ArrayList<Poteza>());
 		HashMap<Igra, List<Poteza>> noveIgre;
-		Vodja.izpisiSeznam(meti);
 		if (meti.length == 4) {
-
 			noveIgre = odigrajVsePoteze2(
 				odigrajVsePoteze2(
 				odigrajVsePoteze2(
@@ -186,16 +195,20 @@ public class MonteCarlo {
 			posameznaIgra.naPotezi = posameznaIgra.naPotezi.nasprotnik();
 			seznam.add(new Postavitev(posameznaIgra, 0, 0, 0));
 		}
-		
-		drevo.put(postavitev, seznam);
+		if (seznam.isEmpty()) 		System.out.println("prazen rsp");
+		else {
+			drevo.put(postavitev, seznam);
+		}
 		return noveIgre;
 	}
 		
 	
 	public static Postavitev izbor(Postavitev postavitev) {
-		System.out.println("pizbor zacetek");
+		System.out.println("izbor zacetek");
 		List<Postavitev> otroci = drevo.get(postavitev);
-		double max = 0;
+		System.out.println(otroci.size());
+
+		double max = Double.MIN_VALUE;
 		Postavitev najboljsa = null;
 		for (Postavitev igra: otroci) {
 			double vrednost = UCB(igra, postavitev.odigraneIgre);
@@ -255,6 +268,12 @@ public class MonteCarlo {
 			int i = RANDOM.nextInt(moznePoteze.size());	
 			Poteza poteza = moznePoteze.get(i);
 			odigrajMC(igra, poteza);
+			if (poteza.zacetnoPolje == 26)
+				meti = igra.odstraniMet(meti, poteza.koncnoPolje);
+			else if (poteza.zacetnoPolje == 27)
+				meti = igra.odstraniMet(meti, 25 - poteza.koncnoPolje);
+			else 
+				meti = igra.odstraniMet(meti, Math.abs(poteza.zacetnoPolje - poteza.koncnoPolje));
 		}
 		igra.naPotezi = igra.naPotezi.nasprotnik();
 		rollout(igra);
@@ -263,7 +282,6 @@ public class MonteCarlo {
 	public static void update(Postavitev postavitev, int stZmag, int stZmagNasprotnik) {
 		System.out.println("update zacetek");
 		for (Postavitev p : drevo.keySet()) {
-			//sumljiv contains!!
 			if (drevo.get(p).contains(postavitev)) {
 				p.stZmag += stZmag;
 				p.stZmagNasprotnik += stZmagNasprotnik;

@@ -51,7 +51,6 @@ public class Vodja {
 					meti = new int[] {prviMet, prviMet, prviMet, prviMet};
 				}
 				else {meti = new int[] {prviMet, drugiMet};}
-				izpisiSeznam(meti);
 				break;
 			case R:
 				igrajRacunalnikovoPotezo();
@@ -93,7 +92,7 @@ public class Vodja {
 			@Override
 			protected List<Poteza> doInBackground() {
 				System.out.println("pred montecarlo");
-				List<Poteza> poteze = MonteCarlo.izberiPotezo(igra, vrziKocki(), 400);
+				List<Poteza> poteze = MonteCarlo.izberiPotezo(igra, vrziKocki(), 10);
 				System.out.println("po montecarlo");
 				//izpisiSeznamPotez(poteze);
 				/*for (Poteza p : poteze) {
@@ -113,8 +112,8 @@ public class Vodja {
 
 					for (Poteza p : poteze) {
 						igra.odigraj(p);
-						//okno.osveziGUI();
-						//try {TimeUnit.SECONDS.sleep(1);} catch (Exception e) {};
+						okno.osveziGUI();
+						try {TimeUnit.SECONDS.sleep(1);} catch (Exception e) {};
 					}
 					igra.naPotezi = igra.naPotezi.nasprotnik();
 					igramo ();

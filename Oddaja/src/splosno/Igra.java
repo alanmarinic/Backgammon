@@ -246,7 +246,6 @@ public class Igra {
 	
 	// Odstrani met iz tabele metov
 	public int[] odstraniMet(int[] meti, int met) {
-		Vodja.izpisiSeznam(meti);
 		List<Integer> novi = new ArrayList<>();
 		boolean nadaljuj = true;
 		for (int i : meti) {
@@ -257,7 +256,6 @@ public class Igra {
 		}
 		int[] array = new int[novi.size()];
 		for(int i = 0; i < novi.size(); i++) array[i] = novi.get(i);
-		Vodja.izpisiSeznam(array);
 		return array;
 	}
 
