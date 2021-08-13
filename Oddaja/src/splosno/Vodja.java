@@ -45,12 +45,7 @@ public class Vodja {
 			case C: 
 				System.out.println("clovek");
 				clovekNaVrsti = true;
-				prviMet = Igra.metKocke();
-				drugiMet = Igra.metKocke();
-				if (prviMet == drugiMet) {
-					meti = new int[] {prviMet, prviMet, prviMet, prviMet};
-				}
-				else {meti = new int[] {prviMet, drugiMet};}
+				vrziKocki();
 				break;
 			case R:
 				igrajRacunalnikovoPotezo();
@@ -86,13 +81,14 @@ public class Vodja {
 	}
 	
 	public static void igrajRacunalnikovoPotezo() {
-		Igra zacetnaIgra = igra;
+		Igra tempIgra = new Igra(igra);
 		SwingWorker<List<Poteza>, Void> worker = new SwingWorker<List<Poteza>, Void> () {
 			// V ozadju izbere in odigra računalnikovo potezo
 			@Override
 			protected List<Poteza> doInBackground() {
 				System.out.println("pred montecarlo");
-				List<Poteza> poteze = MonteCarlo.izberiPotezo(igra, vrziKocki(), 10);
+				List<Poteza> poteze = MonteCarlo.izberiPotezo(tempIgra, vrziKocki(), 10);
+
 				System.out.println("po montecarlo");
 				//izpisiSeznamPotez(poteze);
 				/*for (Poteza p : poteze) {
@@ -107,18 +103,19 @@ public class Vodja {
 			protected void done () {
 				List<Poteza> poteze = null;
 				try {poteze = get();} catch (Exception e) {System.out.println("exception");};
-				if (igra == zacetnaIgra) {
+				System.out.println("done");
+				Vodja.izpisiSeznamPotez(poteze);
 					if (poteze == null) 		System.out.println("poteze v vodji so null");
-
+					else {
 					for (Poteza p : poteze) {
-						igra.odigraj(p);
-						okno.osveziGUI();
+						if (igra.odigraj(p)) System.out.println("odigran p");
+						//okno.osveziGUI();
 						try {TimeUnit.SECONDS.sleep(1);} catch (Exception e) {};
 					}
 					igra.naPotezi = igra.naPotezi.nasprotnik();
-					igramo ();
-				}
-			}
+					//igramo ();
+					}
+				}			
 		};
 		worker.execute();
 	}

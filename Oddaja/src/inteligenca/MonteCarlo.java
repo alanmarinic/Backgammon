@@ -10,7 +10,6 @@ import java.util.Set;
 import splosno.Igra;
 import splosno.Igralec;
 import splosno.Poteza;
-import splosno.Vodja;
 
 //AI uporablja Monte Carlo Tree Search
 public class MonteCarlo {
@@ -22,15 +21,12 @@ public class MonteCarlo {
 	private static Igralec Carlo;
 	
 	//seznam = null
-	//@SuppressWarnings("null")
 	public static List<Poteza> izberiPotezo(Igra igra, int[] meti, int globina) {
 		System.out.println("AI izbira potezo");
 		Igra tempIgra = new Igra(igra);
 		Postavitev glavnaPostavitev = new Postavitev(tempIgra, 0, 0, 0);
 		Carlo = tempIgra.naPotezi();
 		HashMap<Igra, List<Poteza>> sPotezami = razvojSPotezami(glavnaPostavitev, meti);
-		System.out.println("prazvili s potezami");
-		System.out.println("pred while" + sPotezami);
 		while (drevo.size() < globina) {
 			System.out.println("drveo size:" + drevo.size());
 			monte(glavnaPostavitev);
@@ -51,7 +47,6 @@ public class MonteCarlo {
 		List<Poteza> poteze = sPotezami.get(najboljsa.igra);
 		System.out.println("izberi potezo poteze:");
 
-		Vodja.izpisiSeznamPotez(poteze);
 		return poteze;
 	}
 	
@@ -71,7 +66,8 @@ public class MonteCarlo {
 			//nismo se odigrali vsaj nobene igro do konca
 			if (postavitev.odigraneIgre == 0) {
 				System.out.println("monte else if");
-				rollout(postavitev.igra);
+				Igra tempIgra = new Igra(postavitev.igra);
+				rollout(tempIgra);
 				if (zmagovalec == Carlo) {
 					postavitev.stZmag += 1;
 					postavitev.odigraneIgre += 1;
@@ -87,14 +83,7 @@ public class MonteCarlo {
 			else {
 				System.out.println("monte else else");
 				//z naklucnima metoma
-				int prviMet = Igra.metKocke();
-				int drugiMet = Igra.metKocke();
-				int[] meti;
-				if (prviMet == drugiMet) {
-					meti = new int[] {prviMet, prviMet, prviMet, prviMet};
-				}
-				else {meti = new int[] {prviMet, drugiMet};}
-				razvoj(postavitev, meti);
+				razvoj(postavitev, vrziKockiMC());
 				
 				/*if (drevo.get(postavitev).size() != 0) {
 					rollout(drevo.get(postavitev).get(0).igra);
@@ -118,30 +107,27 @@ public class MonteCarlo {
 	public static void razvoj(Postavitev postavitev, int[] meti) {
 		System.out.println("razvoj zacetetk");
 		Set<Igra> zacetnaIgra = new HashSet<Igra>();
-		zacetnaIgra.add(postavitev.igra);
+		Igra tempIgra = new Igra(postavitev.igra);
+		zacetnaIgra.add(tempIgra);
 		Set<Igra> noveIgre;
 		if (meti.length == 4) {
-			System.out.println("razvoj if");
-			noveIgre = odigrajVsePoteze(
-				odigrajVsePoteze(
-				odigrajVsePoteze(
-				odigrajVsePoteze(zacetnaIgra, meti[0]),
-					meti[0]),
-					meti[0]),
-					meti[0]);
-		}
-		
-		else {
-			System.out.println("razvoj else");
+			
+			noveIgre = odigrajVsePoteze(zacetnaIgra, meti[0]);
+			noveIgre = odigrajVsePoteze(noveIgre, meti[1]);
+			noveIgre = odigrajVsePoteze(noveIgre, meti[2]);
+			noveIgre = odigrajVsePoteze(noveIgre, meti[3]);
 
-			noveIgre = odigrajVsePoteze(
-				odigrajVsePoteze(zacetnaIgra, meti[0]),
-					meti[1]);
+		}
+		else {
+			noveIgre = odigrajVsePoteze(zacetnaIgra, meti[0]);
+			noveIgre = odigrajVsePoteze(noveIgre, meti[1]);
+			
 			noveIgre.addAll(odigrajVsePoteze(
 								odigrajVsePoteze(zacetnaIgra, meti[1]),
 									meti[0]));
 
 		}
+		
 		List<Postavitev> seznam = new ArrayList<>();
 
 		//iz mnozice iger v seznam postavitev
@@ -152,9 +138,9 @@ public class MonteCarlo {
 		//ce je seznam prazen, te postavitve ne dodamo kot kljuc
 		if (seznam.isEmpty()) {
 			System.out.println("prazen");
-			Igra tempIgra = new Igra(postavitev.igra); 
-			tempIgra.naPotezi = tempIgra.naPotezi.nasprotnik();
-			seznam.add(new Postavitev(tempIgra, postavitev.stZmag, postavitev.stZmagNasprotnik, postavitev.odigraneIgre));
+			Igra tempIgra2 = new Igra(postavitev.igra); 
+			tempIgra.naPotezi = tempIgra2.naPotezi.nasprotnik();
+			seznam.add(new Postavitev(tempIgra2, postavitev.stZmag, postavitev.stZmagNasprotnik, postavitev.odigraneIgre));
 			drevo.put(postavitev, seznam);
 		}
 		else {
@@ -168,16 +154,15 @@ public class MonteCarlo {
 		System.out.println("razvoj s potezami");
 
 		HashMap<Igra, List<Poteza>> zacetnaIgra = new HashMap<>();
-		zacetnaIgra.put(postavitev.igra, new ArrayList<Poteza>());
+		Igra tempIgra = new Igra(postavitev.igra);
+		zacetnaIgra.put(tempIgra, new ArrayList<Poteza>());
 		HashMap<Igra, List<Poteza>> noveIgre;
 		if (meti.length == 4) {
-			noveIgre = odigrajVsePoteze2(
-				odigrajVsePoteze2(
-				odigrajVsePoteze2(
-				odigrajVsePoteze2(zacetnaIgra, meti[0]),
-					meti[0]),
-					meti[0]),
-					meti[0]);
+			
+			noveIgre = odigrajVsePoteze2(zacetnaIgra, meti[0]);
+			noveIgre = odigrajVsePoteze2(noveIgre, meti[1]);
+			noveIgre = odigrajVsePoteze2(noveIgre, meti[2]);
+			noveIgre = odigrajVsePoteze2(noveIgre, meti[3]);
 
 		}
 		else {
@@ -195,10 +180,18 @@ public class MonteCarlo {
 			posameznaIgra.naPotezi = posameznaIgra.naPotezi.nasprotnik();
 			seznam.add(new Postavitev(posameznaIgra, 0, 0, 0));
 		}
-		if (seznam.isEmpty()) 		System.out.println("prazen rsp");
-		else {
+		if (seznam.isEmpty()) {
+			System.out.println("prazen rsp");
+			Igra tempIgra2 = new Igra(postavitev.igra); 
+			tempIgra.naPotezi = tempIgra2.naPotezi.nasprotnik();
+			seznam.add(new Postavitev(tempIgra2, postavitev.stZmag, postavitev.stZmagNasprotnik, postavitev.odigraneIgre));
 			drevo.put(postavitev, seznam);
 		}
+		else {
+			drevo.put(postavitev, seznam);
+			System.out.println("rsp konec");
+		}
+		
 		return noveIgre;
 	}
 		
@@ -252,13 +245,7 @@ public class MonteCarlo {
 	
 	
 	public static void poteza(Igra igra) {
-		int[] meti;
-		int prviMet = Igra.metKocke();
-		int drugiMet = Igra.metKocke();
-		if (prviMet == drugiMet) {
-			meti = new int[] {prviMet, prviMet, prviMet, prviMet};
-		}
-		else {meti = new int[] {prviMet, drugiMet};}
+		int[] meti = vrziKockiMC();
 		int dolzina = meti.length;
 		for (int j = 0; j < dolzina; j ++) {
 			List<Poteza> moznePoteze = igra.moznePoteze(meti);
@@ -295,9 +282,6 @@ public class MonteCarlo {
 	
 	
 	
-		
-	
-	
 	public static Set<Igra> odigrajVsePoteze(Set<Igra> igre, int met) {
 		System.out.println("ovp");
 
@@ -308,7 +292,8 @@ public class MonteCarlo {
 			List<Poteza> moznePoteze = igra.moznePoteze(new int[] {met});
 			for (Poteza poteza: moznePoteze) {
 				Igra tempIgra = new Igra(igra);
-				noveIgre.add(odigrajMC(tempIgra, poteza));
+				odigrajMC(tempIgra, poteza);
+				noveIgre.add(tempIgra);
 			}
 		}
 		return noveIgre;
@@ -323,9 +308,11 @@ public class MonteCarlo {
 			List<Poteza> moznePoteze = igra.moznePoteze(new int[] {met});
 			for (Poteza poteza: moznePoteze) {
 				Igra tempIgra = new Igra(igra);
-				List<Poteza> novePoteze = igre.get(igra);
+				List<Poteza> novePoteze = new ArrayList<>(igre.get(igra));
 				novePoteze.add(poteza);
-				noveIgre.put(odigrajMC(tempIgra, poteza), novePoteze);
+				////////////spremenila
+				odigrajMC(tempIgra, poteza);
+				noveIgre.put(tempIgra, novePoteze);
 			}
 		}
 		System.out.println("konec ovp2");
@@ -335,13 +322,25 @@ public class MonteCarlo {
 	
 	
 		
-	public static Igra odigrajMC(Igra igra, Poteza poteza) {
-		Igra tempIgra = new Igra(igra);
+	public static void odigrajMC(Igra igra, Poteza poteza) {
+		//Igra tempIgra = new Igra(igra);
 		//izbrisemo zacetni zeton
-		tempIgra.izbrisiZeton(poteza.zacetnoPolje);
+		igra.izbrisiZeton(poteza.zacetnoPolje);
 		//dodamo zeton na koncnem polju
-		tempIgra.dodajZeton(poteza.koncnoPolje);
-		return tempIgra;
+		igra.dodajZeton(poteza.koncnoPolje);
+		//return tempIgra;
+	}
+	
+	
+	public static int[] vrziKockiMC() {
+		int[] meti;
+		int prviMet = Igra.metKocke();
+		int drugiMet = Igra.metKocke();
+		if (prviMet == drugiMet) {
+			meti = new int[] {prviMet, prviMet, prviMet, prviMet};
+		}
+		else {meti = new int[] {prviMet, drugiMet};}
+		return meti;
 	}
 
 }
