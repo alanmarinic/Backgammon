@@ -71,7 +71,7 @@ public class Igra {
 		naPotezi = kdoZacne();
 	}
 	
-	//
+	
 	public Igra(Igra igra) {
 		this.plosca = new PoljeInZetoni[28];
 		for (int i = 0; i < 28; i++) {

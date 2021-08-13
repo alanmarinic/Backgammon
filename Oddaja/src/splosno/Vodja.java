@@ -73,7 +73,7 @@ public class Vodja {
 			@Override
 			protected List<Poteza> doInBackground() {
 				System.out.println("pred montecarlo");
-				List<Poteza> poteze = MonteCarlo.izberiPotezo(tempIgra, vrziKocki(), 10);
+				List<Poteza> poteze = MonteCarlo.izberiPotezo(tempIgra, vrziKocki(), 100);
 
 				System.out.println("po montecarlo");
 				//izpisiSeznamPotez(poteze);
@@ -94,11 +94,15 @@ public class Vodja {
 				if (poteze == null) 		System.out.println("poteze v vodji so null");
 				else {
 					for (Poteza p : poteze) {
-						if (igra.odigraj(p)) System.out.println("odigran p");
+						igra.odigraj(p);
+						System.out.println("odigran p");
+						///////ne osvezi
 						okno.osveziGUI();
-						try {TimeUnit.SECONDS.sleep(1);} catch (Exception e) {};
+						//try {TimeUnit.SECONDS.sleep(2);} catch (Exception e) {};
 					}
 				igra.naPotezi = igra.naPotezi().nasprotnik();
+				try {TimeUnit.SECONDS.sleep(2);} catch (Exception e) {};
+
 				igramo ();
 				}
 			}			

@@ -10,6 +10,7 @@ import java.util.Set;
 import splosno.Igra;
 import splosno.Igralec;
 import splosno.Poteza;
+import splosno.Vodja;
 
 //AI uporablja Monte Carlo Tree Search
 public class MonteCarlo {
@@ -27,8 +28,9 @@ public class MonteCarlo {
 		Postavitev glavnaPostavitev = new Postavitev(tempIgra, 0, 0, 0);
 		Carlo = tempIgra.naPotezi();
 		HashMap<Igra, List<Poteza>> sPotezami = razvojSPotezami(glavnaPostavitev, meti);
+					System.out.println("drveo size:" + drevo.size());
+
 		while (drevo.size() < globina) {
-			System.out.println("drveo size:" + drevo.size());
 			monte(glavnaPostavitev);
 		}
 		double max = Double.MIN_VALUE;
@@ -42,17 +44,21 @@ public class MonteCarlo {
 				}
 			}
 		}
-		if (najboljsa == null) 		System.out.println("najboljsa null");
-
+		if (najboljsa == null) 	{
+			System.out.println("najboljsa je null");
+			System.out.println(drevo.get(glavnaPostavitev).size());
+			najboljsa = drevo.get(glavnaPostavitev).get(0);
+		}
 		List<Poteza> poteze = sPotezami.get(najboljsa.igra);
 		System.out.println("izberi potezo poteze:");
-
+		Vodja.izpisiSeznamPotez(poteze);
 		return poteze;
 	}
 	
 	
 	public static void monte(Postavitev postavitev) {
 		System.out.println("monte");
+		if (postavitev == null) System.out.println("null v monte");
 		//ce postavitev ni list
 		if (drevo.keySet().contains(postavitev)) {
 			System.out.println("contains");
@@ -158,12 +164,10 @@ public class MonteCarlo {
 		zacetnaIgra.put(tempIgra, new ArrayList<Poteza>());
 		HashMap<Igra, List<Poteza>> noveIgre;
 		if (meti.length == 4) {
-			
 			noveIgre = odigrajVsePoteze2(zacetnaIgra, meti[0]);
 			noveIgre = odigrajVsePoteze2(noveIgre, meti[1]);
 			noveIgre = odigrajVsePoteze2(noveIgre, meti[2]);
 			noveIgre = odigrajVsePoteze2(noveIgre, meti[3]);
-
 		}
 		else {
 			noveIgre = odigrajVsePoteze2(zacetnaIgra, meti[0]);
@@ -199,8 +203,7 @@ public class MonteCarlo {
 	public static Postavitev izbor(Postavitev postavitev) {
 		System.out.println("izbor zacetek");
 		List<Postavitev> otroci = drevo.get(postavitev);
-		System.out.println(otroci.size());
-
+		//if (otroci.size() == 1) return otroci.get(0);
 		double max = Double.MIN_VALUE;
 		Postavitev najboljsa = null;
 		for (Postavitev igra: otroci) {
@@ -215,12 +218,12 @@ public class MonteCarlo {
 		return najboljsa;
 	}
 	
-	public static double UCB(Postavitev postavitev, double odigraneIgre) {
+	public static double UCB(Postavitev postavitev, double N) {
 		int c = 2;
 		if (postavitev.odigraneIgre == 0) {
 			return Double.MAX_VALUE;
 		}
-		return postavitev.stZmag/postavitev.odigraneIgre + c * Math.sqrt(Math.log(odigraneIgre)/postavitev.odigraneIgre);
+		return postavitev.stZmag/postavitev.odigraneIgre + c * Math.sqrt((Math.log(N))/postavitev.odigraneIgre);
 	}
 	
 	private static final Random RANDOM = new Random();
@@ -290,6 +293,7 @@ public class MonteCarlo {
 			
 
 			List<Poteza> moznePoteze = igra.moznePoteze(new int[] {met});
+			Vodja.izpisiSeznamPotez(moznePoteze);
 			for (Poteza poteza: moznePoteze) {
 				Igra tempIgra = new Igra(igra);
 				odigrajMC(tempIgra, poteza);
