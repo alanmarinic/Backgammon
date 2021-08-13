@@ -43,7 +43,6 @@ public class Vodja {
 			VrstaIgralca vrstaNaPotezi = vrstaIgralca.get(igralec);
 			switch (vrstaNaPotezi) {
 			case C: 
-				System.out.println("clovek");
 				clovekNaVrsti = true;
 				vrziKocki();
 				break;
@@ -72,36 +71,28 @@ public class Vodja {
 			// V ozadju izbere in odigra računalnikovo potezo
 			@Override
 			protected List<Poteza> doInBackground() {
-				System.out.println("pred montecarlo");
-				List<Poteza> poteze = MonteCarlo.izberiPotezo(tempIgra, vrziKocki(), 100);
-
-				System.out.println("po montecarlo");
-				//izpisiSeznamPotez(poteze);
-				/*for (Poteza p : poteze) {
-					igra.odigraj(p);
-					okno.osveziGUI();
-					try {TimeUnit.SECONDS.sleep(1);} catch (Exception e) {};
-				}*/
-				if (poteze == null) 		System.out.println("poteze v vodji1 so null");
+				List<Poteza> poteze = MonteCarlo.izberiPotezo(tempIgra, vrziKocki(), 100);				
 				return poteze;
 			}
 			@Override
 			protected void done () {
 				List<Poteza> poteze = null;
-				try {poteze = get();} catch (Exception e) {System.out.println("exception");};
-				System.out.println("done");
-				Vodja.izpisiSeznamPotez(poteze);
-				if (poteze == null) 		System.out.println("poteze v vodji so null");
+				try {poteze = get();} catch (Exception e) {};
+				if (poteze == null) {
+					igra.naPotezi = igra.naPotezi().nasprotnik();
+					igramo();
+				}
+				if (poteze.isEmpty()) {
+					igra.naPotezi = igra.naPotezi().nasprotnik();
+					igramo();
+				}
 				else {
 					for (Poteza p : poteze) {
 						igra.odigraj(p);
-						System.out.println("odigran p");
-						///////ne osvezi
 						okno.osveziGUI();
-						//try {TimeUnit.SECONDS.sleep(2);} catch (Exception e) {};
+						try {TimeUnit.SECONDS.sleep(1);} catch (Exception e) {};
 					}
 				igra.naPotezi = igra.naPotezi().nasprotnik();
-				try {TimeUnit.SECONDS.sleep(2);} catch (Exception e) {};
 
 				igramo ();
 				}
@@ -120,15 +111,4 @@ public class Vodja {
 		}
 		
 	}	
-	
-	public static void izpisiSeznam(int[] seznam) {
-		for (int i : seznam) System.out.print(i + " ");
-		System.out.println();
-	}
-	
-	public static void izpisiSeznamPotez(List<Poteza> seznam) {
-		if (seznam == null) System.out.println("null je");
-		for (Poteza i : seznam) System.out.print(i.zacetnoPolje + "-" + i.koncnoPolje + " ");
-		System.out.println();
-	}
 }

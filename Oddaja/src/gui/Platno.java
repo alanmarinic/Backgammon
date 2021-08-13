@@ -379,7 +379,6 @@ public class Platno extends JPanel implements MouseListener{
 			}
 			
 			klik = polje;
-			System.out.println(polje);
 			if (polje != -1) {
 				if (zacetnoPolje == -1) {
 					zacetnoPolje = polje;
