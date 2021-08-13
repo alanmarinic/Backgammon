@@ -48,7 +48,7 @@ public class Vodja {
 		}
 	}
 	
-	//Vrne seznam metov kock, podvojen, ce sta meta enaka
+	// Vrne seznam metov kock, podvojen, ce sta meta enaka
 	public static int[] vrziKocki() {
 		prviMet = Igra.metKocke();
 		drugiMet = Igra.metKocke();
@@ -59,7 +59,7 @@ public class Vodja {
 		return meti;
 	}
 	
-	//Racunalnik odigra svojo potezo z uporabo Monte Carlo Tree Search metodo
+	// Racunalnik odigra svojo potezo z uporabo Monte Carlo Tree Search metodo
 	public static void igrajRacunalnikovoPotezo() {
 		Igra tempIgra = new Igra(igra);
 		SwingWorker<List<Poteza>, Void> worker = new SwingWorker<List<Poteza>, Void> () {
@@ -69,7 +69,7 @@ public class Vodja {
 				List<Poteza> poteze = MonteCarlo.izberiPotezo(tempIgra, vrziKocki(), 100);				
 				return poteze;
 			}
-			//Odigra potezo
+			// Odigra potezo
 			@Override
 			protected void done () {
 				List<Poteza> poteze = null;
@@ -105,6 +105,6 @@ public class Vodja {
 			igra.naPotezi = igra.naPotezi().nasprotnik();
 			igramo ();
 		}
-		
 	}	
+
 }

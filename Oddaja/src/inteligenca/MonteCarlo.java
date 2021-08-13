@@ -11,20 +11,20 @@ import splosno.Igra;
 import splosno.Igralec;
 import splosno.Poteza;
 
-//AI uporablja Monte Carlo Tree Search
+// AI uporablja Monte Carlo Tree Search
 public class MonteCarlo {
 	
-	//kljuci so postavitve, vrednosti pa trojice zmag, porazov in stevil odigranih iger
+	// Kljuci so postavitve, vrednosti pa trojice zmag, porazov in stevil odigranih iger
 	private static HashMap<Postavitev, List<Postavitev>> drevo = new HashMap<>();
 	
-	//igralec, ki izbira potezo
+	// Igralec, ki izbira potezo
 	private static Igralec Carlo;
 	
-	//seznam = null
 	public static List<Poteza> izberiPotezo(Igra igra, int[] meti, int globina) {
 		Igra tempIgra = new Igra(igra);
 		Postavitev glavnaPostavitev = new Postavitev(tempIgra, 0, 0, 0);
 		Carlo = tempIgra.naPotezi();
+		// Razvejamo glavno igro
 		HashMap<Igra, List<Poteza>> sPotezami = razvojSPotezami(glavnaPostavitev, meti);
 		while (drevo.size() < globina) {
 			monte(glavnaPostavitev);
@@ -50,14 +50,14 @@ public class MonteCarlo {
 	
 	
 	public static void monte(Postavitev postavitev) {
-		//ce postavitev ni list
+		// Ce postavitev ni list
 		if (drevo.keySet().contains(postavitev)) {
 			Postavitev izbranaPostavitev = izbor(postavitev);
 			monte(izbranaPostavitev);
 		}
-		//postavitev je list
+		// Postavitev je list
 		else {
-			//nismo se odigrali vsaj nobene igro do konca
+			// Nismo se odigrali se nobene igre do konca
 			if (postavitev.odigraneIgre == 0) {
 				Igra tempIgra = new Igra(postavitev.igra);
 				rollout(tempIgra);
@@ -72,14 +72,15 @@ public class MonteCarlo {
 					update(postavitev, 0, 1);
 				}
 			}
-			//je ze odigrana vsaj ena igra
+			// Je ze odigrana vsaj ena igra
 			else {
-				//z naklucnima metoma
+				// Razvoj z naklucnima metoma
 				razvoj(postavitev, vrziKockiMC());
 			}
 		}
 	}
 	
+	// Razvije igro z danimi meti
 	public static void razvoj(Postavitev postavitev, int[] meti) {
 		Set<Igra> zacetnaIgra = new HashSet<Igra>();
 		Igra tempIgra = new Igra(postavitev.igra);
@@ -99,12 +100,12 @@ public class MonteCarlo {
 									meti[0]));
 		}
 		List<Postavitev> seznam = new ArrayList<>();
-		//iz mnozice iger v seznam postavitev
+		// Iz mnozice iger v seznam postavitev
 		for (Igra posameznaIgra : noveIgre) {
 			posameznaIgra.naPotezi = posameznaIgra.naPotezi().nasprotnik();
 			seznam.add(new Postavitev(posameznaIgra, 0, 0, 0));
 		}
-		//ce je seznam prazen, te postavitve ne dodamo kot kljuc
+		// Ce je seznam prazen, te postavitve ne dodamo kot kljuc
 		if (seznam.isEmpty()) {
 			Igra tempIgra2 = new Igra(postavitev.igra); 
 			tempIgra.naPotezi = tempIgra2.naPotezi().nasprotnik();
@@ -114,9 +115,9 @@ public class MonteCarlo {
 		else {
 			drevo.put(postavitev, seznam);
 		}
-		
 	}
 	
+	// Razvoj z danimi meti za prvo pozicijo, kjer shranimo tudi poteze
 	public static HashMap<Igra, List<Poteza>> razvojSPotezami(Postavitev postavitev, int[] meti) {
 		HashMap<Igra, List<Poteza>> zacetnaIgra = new HashMap<>();
 		Igra tempIgra = new Igra(postavitev.igra);
@@ -138,7 +139,7 @@ public class MonteCarlo {
 
 		}
 		List<Postavitev> seznam = new ArrayList<>();
-		//iz mnozice iger v seznam postavitev
+		// Iz mnozice iger v seznam postavitev
 		for (Igra posameznaIgra : noveIgre.keySet()) {
 			posameznaIgra.naPotezi = posameznaIgra.naPotezi().nasprotnik();
 			seznam.add(new Postavitev(posameznaIgra, 0, 0, 0));
@@ -155,10 +156,9 @@ public class MonteCarlo {
 		return noveIgre;
 	}
 		
-	
+	// Izbere najboljso naslednjo postavitev
 	public static Postavitev izbor(Postavitev postavitev) {
 		List<Postavitev> otroci = drevo.get(postavitev);
-		//if (otroci.size() == 1) return otroci.get(0);
 		double max = Double.MIN_VALUE;
 		Postavitev najboljsa = null;
 		for (Postavitev igra: otroci) {
@@ -172,6 +172,7 @@ public class MonteCarlo {
 		return najboljsa;
 	}
 	
+	// Formula za oceno
 	public static double UCB(Postavitev postavitev, double N) {
 		int c = 2;
 		if (postavitev.odigraneIgre == 0) {
@@ -179,12 +180,10 @@ public class MonteCarlo {
 		}
 		return postavitev.stZmag/postavitev.odigraneIgre + c * Math.sqrt((Math.log(N))/postavitev.odigraneIgre);
 	}
-	
-	private static final Random RANDOM = new Random();
 
-	
-	//rollout sprejme igro, na koncu potebno posodobiti postavitev glede na zmagovalca
 	private static Igralec zmagovalec;
+	
+	// Rollout sprejme igro, jo odigra do konca in doloci zmagovalca
 	public static void rollout(Igra igra) {
 		Igra tempIgra = new Igra(igra);
 		switch (tempIgra.stanje()) {
@@ -196,11 +195,12 @@ public class MonteCarlo {
 			break;
 		case V_TEKU: 
 			poteza(tempIgra);
-		}
-			
+		}		
 	}
 	
+	private static final Random RANDOM = new Random();
 	
+	// Pomozna funkcija rollouta z nakljucnimi potezami
 	public static void poteza(Igra igra) {
 		int[] meti = vrziKockiMC();
 		int dolzina = meti.length;
@@ -223,6 +223,7 @@ public class MonteCarlo {
 		rollout(igra);
 	}
 	
+	// Posodobi stevilo zmag in porazov
 	public static void update(Postavitev postavitev, int stZmag, int stZmagNasprotnik) {
 		for (Postavitev p : drevo.keySet()) {
 			if (drevo.get(p).contains(postavitev)) {
@@ -234,6 +235,7 @@ public class MonteCarlo {
 		}
 	}
 	
+	// Za dolocene igre odigra vse mozne poteze
 	public static Set<Igra> odigrajVsePoteze(Set<Igra> igre, int met) {
 		Set<Igra> noveIgre = new HashSet<Igra>();
 		for (Igra igra: igre) {
@@ -247,6 +249,7 @@ public class MonteCarlo {
 		return noveIgre;
 	}
 	
+	// Za dolocene igre odigramo vse mozne poteze in shranjujemo poteze, uporabimo v prvem koraku izbiranje poteze
 	public static HashMap<Igra, List<Poteza>> odigrajVsePoteze2(HashMap<Igra, List<Poteza>> igre, int met) {
 		HashMap<Igra, List<Poteza>> noveIgre = new HashMap<>();
 		for (Igra igra: igre.keySet()) {
@@ -262,19 +265,15 @@ public class MonteCarlo {
 		}
 		return noveIgre;
 	}
-	
-	
 		
 	public static void odigrajMC(Igra igra, Poteza poteza) {
-		//Igra tempIgra = new Igra(igra);
-		//izbrisemo zacetni zeton
+		// Izbrisemo zacetni zeton
 		igra.izbrisiZeton(poteza.zacetnoPolje);
-		//dodamo zeton na koncnem polju
+		// Dodamo zeton na koncnem polju
 		igra.dodajZeton(poteza.koncnoPolje);
-		//return tempIgra;
 	}
 	
-	
+	// Met kock, vrne seznam metov
 	public static int[] vrziKockiMC() {
 		int[] meti;
 		int prviMet = Igra.metKocke();
@@ -285,5 +284,5 @@ public class MonteCarlo {
 		else {meti = new int[] {prviMet, drugiMet};}
 		return meti;
 	}
-
+	
 }
