@@ -9,5 +9,8 @@ public class PoljeInZetoni {
 		this.polje = polje;
 		this.steviloZetonov = steviloZetonov;
 	}
+	public static PoljeInZetoni kopija(PoljeInZetoni piz) {
+		return new PoljeInZetoni(piz.polje, piz.steviloZetonov);
+	}
 
 }

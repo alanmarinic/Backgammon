@@ -75,9 +75,10 @@ public class Igra {
 	public Igra(Igra igra) {
 		this.plosca = new PoljeInZetoni[28];
 		for (int i = 0; i < 28; i++) {
-				this.plosca[i] = igra.plosca[i];
+				this.plosca[i] = PoljeInZetoni.kopija(igra.plosca[i]);
+
 		}
-		this.naPotezi = igra.naPotezi;
+		this.naPotezi = igra.naPotezi();
 	}
 	
 	public PoljeInZetoni[] getPlosca () {
@@ -93,7 +94,7 @@ public class Igra {
 		List<Poteza> moznePoteze = new ArrayList<Poteza>();
 		
 		// Bele figure
-		if (naPotezi == Igralec.Bela) {
+		if (naPotezi() == Igralec.Bela) {
 			// Najprej preverimo, če je kakšen žeton na sredini (zbit)
 			if (plosca[26].steviloZetonov > 0) {
 				for (int i: meti) {
@@ -128,7 +129,7 @@ public class Igra {
 			}
 		}
 		// Črne figure
-		else if (naPotezi == Igralec.Crna) {
+		else if (naPotezi() == Igralec.Crna) {
 			if (plosca[27].steviloZetonov > 0) {
 				for (int i: meti) {
 					if (plosca[25 - i].polje == Polje.PRAZNO || plosca[25 - i].polje == Polje.Crna || (plosca[25 - i].polje == Polje.Bela && plosca[25 - i].steviloZetonov == 1)) {
@@ -190,16 +191,16 @@ public class Igra {
 	// Pomožna funkcija, ki doda žeton na mesto kamor smo odigrali potezo
 	public void dodajZeton(int polje) {
 		if (plosca[polje].polje == Polje.PRAZNO) {
-			plosca[polje].polje = naPotezi.getPolje();
+			plosca[polje].polje = naPotezi().getPolje();
 			plosca[polje].steviloZetonov = 1;
 		}
-		else if (plosca[polje].polje == naPotezi.getPolje()) {
+		else if (plosca[polje].polje == naPotezi().getPolje()) {
 			plosca[polje].steviloZetonov += 1;
 		}
 		else {
-			plosca[polje].polje = naPotezi.getPolje();
+			plosca[polje].polje = naPotezi().getPolje();
 			plosca[polje].steviloZetonov = 1;
-			if (naPotezi == Igralec.Crna) {
+			if (naPotezi() == Igralec.Crna) {
 				plosca[26].steviloZetonov += 1;
 			}
 			else {

@@ -54,21 +54,7 @@ public class Vodja {
 		}
 	}
 	
-	/*public static void igrajRacunalnikovoPotezo1() {
-		int[] meti = vrziKocki();
-		int dolzina = meti.length;
-		for (int j = 0; j < dolzina; j ++) {
-			List<Poteza> moznePoteze = Igra.moznePoteze(meti);
-			if (moznePoteze.size() == 0) {
-				break;
-			}
-			int i = RANDOM.nextInt(moznePoteze.size());	
-			Poteza poteza = moznePoteze.get(i);
-			igra.odigraj(poteza);
-		}
-		Igra.naPotezi = Igra.naPotezi.nasprotnik();
-		igramo ();
-	}*/
+	
 	
 	public static int[] vrziKocki() {
 		prviMet = Igra.metKocke();
@@ -105,17 +91,17 @@ public class Vodja {
 				try {poteze = get();} catch (Exception e) {System.out.println("exception");};
 				System.out.println("done");
 				Vodja.izpisiSeznamPotez(poteze);
-					if (poteze == null) 		System.out.println("poteze v vodji so null");
-					else {
+				if (poteze == null) 		System.out.println("poteze v vodji so null");
+				else {
 					for (Poteza p : poteze) {
 						if (igra.odigraj(p)) System.out.println("odigran p");
-						//okno.osveziGUI();
+						okno.osveziGUI();
 						try {TimeUnit.SECONDS.sleep(1);} catch (Exception e) {};
 					}
-					igra.naPotezi = igra.naPotezi.nasprotnik();
-					//igramo ();
-					}
-				}			
+				igra.naPotezi = igra.naPotezi().nasprotnik();
+				igramo ();
+				}
+			}			
 		};
 		worker.execute();
 	}
@@ -125,7 +111,7 @@ public class Vodja {
 		okno.osveziGUI();
 		if (meti.length == 0) {
 			clovekNaVrsti = false;
-			igra.naPotezi = igra.naPotezi.nasprotnik();
+			igra.naPotezi = igra.naPotezi().nasprotnik();
 			igramo ();
 		}
 		

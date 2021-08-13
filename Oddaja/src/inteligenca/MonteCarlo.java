@@ -132,14 +132,14 @@ public class MonteCarlo {
 
 		//iz mnozice iger v seznam postavitev
 		for (Igra posameznaIgra : noveIgre) {
-			posameznaIgra.naPotezi = posameznaIgra.naPotezi.nasprotnik();
+			posameznaIgra.naPotezi = posameznaIgra.naPotezi().nasprotnik();
 			seznam.add(new Postavitev(posameznaIgra, 0, 0, 0));
 		}
 		//ce je seznam prazen, te postavitve ne dodamo kot kljuc
 		if (seznam.isEmpty()) {
 			System.out.println("prazen");
 			Igra tempIgra2 = new Igra(postavitev.igra); 
-			tempIgra.naPotezi = tempIgra2.naPotezi.nasprotnik();
+			tempIgra.naPotezi = tempIgra2.naPotezi().nasprotnik();
 			seznam.add(new Postavitev(tempIgra2, postavitev.stZmag, postavitev.stZmagNasprotnik, postavitev.odigraneIgre));
 			drevo.put(postavitev, seznam);
 		}
@@ -177,13 +177,13 @@ public class MonteCarlo {
 		List<Postavitev> seznam = new ArrayList<>();
 		//iz mnozice iger v seznam postavitev
 		for (Igra posameznaIgra : noveIgre.keySet()) {
-			posameznaIgra.naPotezi = posameznaIgra.naPotezi.nasprotnik();
+			posameznaIgra.naPotezi = posameznaIgra.naPotezi().nasprotnik();
 			seznam.add(new Postavitev(posameznaIgra, 0, 0, 0));
 		}
 		if (seznam.isEmpty()) {
 			System.out.println("prazen rsp");
 			Igra tempIgra2 = new Igra(postavitev.igra); 
-			tempIgra.naPotezi = tempIgra2.naPotezi.nasprotnik();
+			tempIgra.naPotezi = tempIgra2.naPotezi().nasprotnik();
 			seznam.add(new Postavitev(tempIgra2, postavitev.stZmag, postavitev.stZmagNasprotnik, postavitev.odigraneIgre));
 			drevo.put(postavitev, seznam);
 		}
@@ -262,7 +262,7 @@ public class MonteCarlo {
 			else 
 				meti = igra.odstraniMet(meti, Math.abs(poteza.zacetnoPolje - poteza.koncnoPolje));
 		}
-		igra.naPotezi = igra.naPotezi.nasprotnik();
+		igra.naPotezi = igra.naPotezi().nasprotnik();
 		rollout(igra);
 	}
 	
